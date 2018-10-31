@@ -1,12 +1,34 @@
 <template>
     <div id="form">
-      <PersonForm />
-      <EmailAddressForm v-bind:key="emailAddress + 'e'" v-for="emailAddress in emailAddressForms" />
-      <button @click="addForm('emailAddressForms')">Add Emial Address</button>
-      <PhoneNumberForm  v-bind:key="phoneNumber + 'p'" v-for="phoneNumber in phoneNumberForms"   />
-      <button @click="addForm('phoneNumberForms')">Add Phone Number</button>
-      <AddressForm  v-bind:key="address + 'a'" v-for="address in addressForms"   />
-      <button @click="addForm('addressForms')">Add Address</button>
+      <transition name="fade">
+        <div  v-if="active === 'PersonForm'">
+          <PersonForm />
+        </div>
+      </transition>
+
+      <transition name="fade">
+        <div  v-if="active === 'EmailAddressForm'">
+          <EmailAddressForm v-bind:key="emailAddress + 'e'" v-for="emailAddress in emailAddressForms" />
+          <button @click="addForm('emailAddressForms')">Add Emial Address</button>
+        </div>
+      </transition>
+
+      <transition name="fade">
+        <div v-if="active === 'PhoneNumberForm'">
+          <PhoneNumberForm  v-bind:key="phoneNumber + 'p'" v-for="phoneNumber in phoneNumberForms"   />
+          <button @click="addForm('phoneNumberForms')">Add Phone Number</button>
+        </div>
+      </transition>
+
+      <transition name="fade">
+        <div v-if="active === 'AddressForm'">
+          <AddressForm  v-bind:key="address + 'a'" v-for="address in addressForms"   />
+          <button @click="addForm('addressForms')">Add Address</button>
+        </div>
+      </transition>
+
+      <button @click="move('previous')">Previous</button>
+      <button @click="move('next')">Next</button>
     </div>
 </template>
 
@@ -34,6 +56,7 @@ export default {
       emailAddressForms: [1],
       phoneNumberForms: [1],
       addressForms: [1],
+      active: 'PersonForm'
     };
   },
   computed: {
@@ -44,6 +67,34 @@ export default {
     ...mapActions([]),
     addForm(form) {
       this.$data[form] = [...this.$data[form], ++this.$data[form].length];
+    },
+    move(direction) {
+      let states = {
+        PersonForm: {
+          previous: 'PersonForm',
+          active: 'PersonForm',
+          next: 'EmailAddressForm'
+        },
+        EmailAddressForm: {
+          previous: 'PersonForm',
+          active: 'EmailAddressForm',
+          next: 'PhoneNumberForm'
+        },
+        PhoneNumberForm: {
+          previous: 'EmailAddressForm',
+          active: 'PhoneNumberForm',
+          next: 'AddressForm'
+        },
+        AddressForm: {
+          previous: 'PhoneNumberForm',
+          active: 'AddressForm',
+          next: 'AddressForm'
+        }
+      }
+
+      let currState = this.$data.active;
+
+      this.$data.active = states[currState][direction];
     }
   },
   watch: {
@@ -76,6 +127,18 @@ export default {
 
   form {
     margin: 0 auto;
+  }
+
+  .fade-enter-active {
+    transition: opacity .5s;
+  }
+  
+  .fade-leave-active {
+    display: none;
+  }
+
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 
 </style>
