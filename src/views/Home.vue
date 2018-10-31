@@ -1,19 +1,18 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <Form />
+    <ContactForm />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Form from "@/components/Form.vue";
-// import Select from "@/components/Select.vue";
+import ContactForm from "@/components/ContactForm.vue";
 
 export default {
   name: "home",
   components: {
-    Form
+    ContactForm
   }
 };
 </script>
