@@ -1,5 +1,12 @@
 <template>
     <div id="form">
+
+      <div>
+      <button @click="move('previous')">Previous</button><button @click="move('next')">Next</button>
+      </div>
+      <pre>
+        {{contactForm }}
+        </pre>
       <transition name="fade">
         <div  v-if="active === 'PersonForm'">
           <PersonForm />
@@ -26,9 +33,6 @@
           <button @click="addForm('addressForms')">Add Address</button>
         </div>
       </transition>
-
-      <button @click="move('previous')">Previous</button>
-      <button @click="move('next')">Next</button>
     </div>
 </template>
 
@@ -60,7 +64,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([]),
+    ...mapState(["contactForm"]),
     ...mapGetters([]),
   },
   methods: {
@@ -69,6 +73,8 @@ export default {
       this.$data[form] = [...this.$data[form], ++this.$data[form].length];
     },
     move(direction) {
+      console.log(this.$props);
+      console.log(this.$data);
       let states = {
         PersonForm: {
           previous: 'PersonForm',

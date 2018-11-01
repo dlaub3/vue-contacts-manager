@@ -1,8 +1,8 @@
 <template>
     <form>
-        <input type="text" value="" placeholder="First Name" autofocus required/>
-        <input type="text" value="" placeholder="Last Name"/>
-        <input type="text" value="" placeholder="Date Of Birth"/>
+        <input type="text" v-model="personForm.firstName" value="" placeholder="First Name" autofocus required/>
+        <input type="text" v-model="personForm.lastName" value="" placeholder="Last Name"/>
+        <input type="text" v-model="personForm.dateOfBirth" value="" placeholder="Date Of Birth"/>
     </form>
 </template>
 
@@ -20,10 +20,13 @@ export default {
   },
   data() {
     return {
+        first: "glob",
+        last: "dan",
+        dob: "123",
     };
   },
   computed: {
-    ...mapState([]),
+    ...mapState(["personForm"]),
     ...mapGetters([]),
   },
   methods: {

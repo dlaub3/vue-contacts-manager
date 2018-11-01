@@ -1,6 +1,6 @@
 <template>
     <form>
-        <input type="phone" value="" placeholder="Phone Number"/>
+        <input type="phone" v-model="phoneNumber" @change="updatePerson" value="" placeholder="Phone Number"/>
         <Select :name="'type_id'" :msg="'Select phone type'" :options="[{id:1, text: 'Primary'},{id:2, text: 'Secondary'},{id:3, text: 'Home'}]" />
     </form>
 </template>
@@ -20,6 +20,7 @@ export default {
   },
   data() {
     return {
+      phoneNumber: ''
     };
   },
   computed: {
@@ -27,7 +28,8 @@ export default {
     ...mapGetters([]),
   },
   methods: {
-    ...mapActions([])
+    ...mapActions([]),
+    ...mapActions(["updatePerson"])
   },
   watch: {
     propName: function() {},
