@@ -3,40 +3,38 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { mapActions } from "vuex";
-import { mapGetters } from "vuex";
+import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
-  name: "Example",
+  name: 'Example',
   props: {
     example: {
       type: String,
-      default: "all"
+      default: 'all',
     },
   },
   components: {},
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapState([]),
     ...mapGetters([]),
-    example() {}
+    example() {},
   },
   methods: {
-    example() {
-    },
-    ...mapActions([])
+    example() {},
+    ...mapActions([]),
   },
   watch: {
     propName: function() {},
   },
-  mounted() {}
+  mounted() {},
+  created() {},
 };
 </script>
 
 <style scoped>
-
 </style>

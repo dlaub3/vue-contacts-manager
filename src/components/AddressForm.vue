@@ -1,66 +1,72 @@
 <template>
-    <form>
-        <input type="text" value="" placeholder="Address 1"/>
-        <input type="text" value="" placeholder="Address 2"/>
-        <input type="text" value="" placeholder="City"/>
-        <input type="text" value="" placeholder="State"/>
-        <input type="text" value="" placeholder="Zip"/>
-        <Select :name="'type_id'" :msg="'Select address type'" :options="[{id:1, text: 'Primary'},{id:2, text: 'Secondary'},{id:3, text: 'Home'}]"/>
+  <div>
+    <form v-for="form in forms" v-bind:key="form.id">
+        <input 
+          v-model="form.address1" 
+          type="text" 
+          placeholder="Address 1" 
+          @keyup="updateForm({ form: 'addressForm', id: form.id, adress1: form.adress1, field: 'adress1' })" 
+        />
+        <input 
+          v-model="form.address2" 
+          type="text" 
+          placeholder="Address 2"
+          @keyup="updateForm({ form: 'addressForm', id: form.id, adress2: form.adress2, field: 'adress2' })" 
+        />
+        <input 
+          v-model="form.city" 
+          type="text" 
+          placeholder="City"
+          @keyup="updateForm({ form: 'addressForm', id: form.id, city: form.city, field: 'city' })" 
+        />
+        <input 
+          v-model="form.state" 
+          type="text" 
+          placeholder="State"
+          @keyup="updateForm({ form: 'addressForm', id: form.id, state: form.state, field: 'state' })" 
+        >
+        <input 
+          v-model="form.zip" 
+          type="text" 
+          placeholder="Zip"
+          @keyup="updateForm({ form: 'addressForm', id: form.id, zip: form.zip, field: 'zip' })" 
+          />
+        <Select
+          :message="'Select email type'" 
+          :selectedOption="form.typeID" 
+          :options="options"
+				  v-on:option-selected="updateForm({ form: 'addressForm', id: form.id, typeID: $event, field: 'typeID'})" 
+        />
     </form>
+      <button @click="addForm('addressForm')">Add Emial Address</button>
+  </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { mapActions } from "vuex";
-import { mapGetters } from "vuex";
-import Select from "@/components/Select.vue";
+import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import Select from '@/components/Select.vue';
+import formStyles from './formStyles.scss';
 
 export default {
-  name: "AddressForm",
-  props: {
-  },
+  name: 'addressForm',
+  props: {},
   components: {
     Select,
   },
-  data() {
-    return {
-    };
-  },
   computed: {
-    ...mapState([]),
+    ...mapState({
+      forms: state => state.addressForm,
+      options: state => state.typeSelectOptions,
+    }),
     ...mapGetters([]),
   },
   methods: {
-    ...mapActions([])
+    ...mapActions(['addForm', 'updateForm']),
   },
-  watch: {
-    propName: function() {},
-  },
-  mounted() {}
 };
 </script>
 
 <style scoped>
-  #form {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-  }
-
-  input, select {
-    font-size: 1.5em;
-    margin: 0.5em;
-    padding: 0.2em; 
-    display: block;
-    border: 1px solid lightgrey;
-  }
-
-  select > option {
-    width: 400px;
-  }
-
-  form {
-    margin: 0 auto;
-  }
-
 </style>

@@ -1,0 +1,22 @@
+#form {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+input,
+select {
+  font-size: 1.5em;
+  margin: 0.5em;
+  padding: 0.2em;
+  display: block;
+  border: 1px solid lightgrey;
+}
+
+select>option {
+  width: 400px;
+}
+
+form {
+  margin: 0 auto;
+}

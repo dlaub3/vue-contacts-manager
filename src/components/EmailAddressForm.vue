@@ -1,62 +1,48 @@
 <template>
-    <form>
-        <input type="email" value="" placeholder="Email"/>
-        <Select :name="'type_id'"  :msg="'Select email type'" :options="[{id:1, text: 'Primary'},{id:2, text: 'Secondary'},{id:3, text: 'Home'}]" />
+  <div>
+    <form v-for="form in forms" v-bind:key="form.id">
+      <input  
+        v-model="form.emailAddress" 
+				type="email"
+				placeholder="Email Address" 
+				required
+				@keyup="updateForm({ form: 'emailAddressForm', id: form.id, emailAddress: form.emailAddress, field: 'emailAddress' })" 
+				/>
+      <Select 
+      	:message="'Select email type'" 
+				:selectedOption="form.typeID" 
+				:options="options" 
+				v-on:option-selected="updateForm({ form: 'emailAddressForm', id: form.id, typeID: $event, field: 'typeID'})"
+			/>
     </form>
+     <button @click="addForm('emailAddressForm')">Add Emial Address</button>
+    </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { mapActions } from "vuex";
-import { mapGetters } from "vuex";
-import Select from "@/components/Select.vue";
+import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import Select from '@/components/Select.vue';
+import formStyles from './formStyles.scss';
 
 export default {
-  name: "EmailAddressForm",
-  props: {
-  },
+  name: 'EmailAddressForm',
+  props: {},
   components: {
     Select,
   },
-  data() {
-    return {
-    };
-  },
   computed: {
-    ...mapState([]),
-    ...mapGetters([]),
+    ...mapState({
+      forms: state => state.emailAddressForm,
+      options: state => state.typeSelectOptions,
+    }),
   },
   methods: {
-    ...mapActions([])
+    ...mapActions(['addForm', 'updateForm']),
   },
-  watch: {
-    propName: function() {},
-  },
-  mounted() {}
 };
 </script>
 
 <style scoped>
-  #form {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-  }
-
-  input, select {
-    font-size: 1.5em;
-    margin: 0.5em;
-    padding: 0.2em; 
-    display: block;
-    border: 1px solid lightgrey;
-  }
-
-  select > option {
-    width: 400px;
-  }
-
-  form {
-    margin: 0 auto;
-  }
-
 </style>

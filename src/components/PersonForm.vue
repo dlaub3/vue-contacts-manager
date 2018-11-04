@@ -1,65 +1,47 @@
 <template>
     <form>
-        <input type="text" v-model="personForm.firstName" value="" placeholder="First Name" autofocus required/>
-        <input type="text" v-model="personForm.lastName" value="" placeholder="Last Name"/>
-        <input type="text" v-model="personForm.dateOfBirth" value="" placeholder="Date Of Birth"/>
+        <input 
+          v-model="form.firstName"
+          placeholder="First Name" 
+          type="text" autofocus required 
+          @keyup="updateProp({propkey: 'personForm', value: form})"
+        />
+        <input 
+          v-model="form.lastName"
+          placeholder="Last Name" 
+          type="text" 
+        />
+        <input 
+          v-model="form.dateOfBirth"
+          placeholder="Date Of Birth" 
+          type="text" 
+          @keyup="updateProp({propkey: 'personForm', value: form})"
+        />
     </form>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { mapActions } from "vuex";
-import { mapGetters } from "vuex";
-import Select from "@/components/Select.vue";
+import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import Select from '@/components/Select.vue';
+import formStyles from './formStyles.scss';
 
 export default {
-  name: "PersonForm",
-  props: {},
+  name: 'PersonForm',
   components: {
     Select,
   },
-  data() {
-    return {
-        first: "glob",
-        last: "dan",
-        dob: "123",
-    };
-  },
   computed: {
-    ...mapState(["personForm"]),
-    ...mapGetters([]),
+    ...mapState({
+      form: state => state.personForm,
+    }),
   },
   methods: {
-    ...mapActions([])
+    ...mapActions(['updateProp']),
   },
-  watch: {
-    propName: function() {},
-  },
-  mounted() {}
 };
 </script>
 
 <style scoped>
-  #form {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-  }
-
-  input, select {
-    font-size: 1.5em;
-    margin: 0.5em;
-    padding: 0.2em; 
-    display: block;
-    border: 1px solid lightgrey;
-  }
-
-  select > option {
-    width: 400px;
-  }
-
-  form {
-    margin: 0 auto;
-  }
-
 </style>

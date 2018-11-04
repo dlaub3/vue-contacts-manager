@@ -7,12 +7,12 @@
 
 <script>
 // @ is an alias to /src
-import ContactForm from "@/components/ContactForm.vue";
+import ContactForm from '@/components/ContactForm.vue';
 
 export default {
-  name: "home",
+  name: 'home',
   components: {
-    ContactForm
-  }
+    ContactForm,
+  },
 };
 </script>
