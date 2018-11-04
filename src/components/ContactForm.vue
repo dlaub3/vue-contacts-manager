@@ -2,7 +2,7 @@
     <div id="form"> 
       <div>
         <button v-if="prev" @click="move('previous')">Previous</button>
-        <button v-if="next" @click="move('next')">Next</button>
+        <button v-if="next" @click="move('next')">{{nextText}}</button>
       </div>
 
       <transition name="fade">
@@ -28,6 +28,19 @@
           <AddressForm/>
         </div>
       </transition>
+
+      <transition name="fade">
+        <div v-if="active === 'Review'">
+          <PersonForm />
+          <EmailAddressForm />
+          <PhoneNumberForm />
+          <AddressForm/>
+        </div>
+      </transition>
+
+    <div>
+      <button v-if="!next" @click="handleSubmit">Submit</button>
+    </div>
     </div>
 </template>
 
@@ -54,6 +67,7 @@ export default {
       active: 'PersonForm',
       prev: false,
       next: true,
+      nextText: 'Next',
     };
   },
   computed: {
@@ -69,6 +83,7 @@ export default {
     },
   },
   methods: {
+    handleSubmit() {},
     move(direction) {
       let states = {
         PersonForm: {
@@ -89,6 +104,12 @@ export default {
         AddressForm: {
           previous: 'PhoneNumberForm',
           active: 'AddressForm',
+          next: 'Review',
+          nextText: 'Review',
+        },
+        Review: {
+          previous: 'AddressForm',
+          active: 'Review',
           next: null,
         },
       };
@@ -98,6 +119,7 @@ export default {
       this.$data.active = newState;
       this.$data.prev = states[newState]['previous'] ? true : false;
       this.$data.next = states[newState]['next'] ? true : false;
+      this.$data.nextText = states[newState]['nextText'] || 'Next';
     },
   },
 };
@@ -109,23 +131,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
-}
-
-input,
-select {
-  font-size: 1.5em;
-  margin: 0.5em;
-  padding: 0.2em;
-  display: block;
-  border: 1px solid lightgrey;
-}
-
-select > option {
-  width: 400px;
-}
-
-form {
   margin: 0 auto;
 }
 
