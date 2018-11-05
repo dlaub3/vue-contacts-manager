@@ -1,5 +1,6 @@
 <template>
     <div id="form"> 
+      <ModalMessage :active="showModal" @closeModal="showModal = false" :message="modalMessage"/>
       <div>
         <button v-if="prev" @click="move('previous')">Previous</button>
         <button v-if="next" @click="move('next')">{{nextText}}</button>
@@ -48,15 +49,18 @@
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
+import ModalMessage from '@/components/ModalMessage.vue';
 import PersonForm from '@/components/PersonForm.vue';
 import EmailAddressForm from '@/components/EmailAddressForm.vue';
 import PhoneNumberForm from '@/components/PhoneNumberForm.vue';
 import AddressForm from '@/components/AddressForm.vue';
+import { addContact } from '@/lib/api';
 
 export default {
   name: 'ContactForm',
   props: {},
   components: {
+    ModalMessage,
     PersonForm,
     EmailAddressForm,
     PhoneNumberForm,
@@ -68,6 +72,8 @@ export default {
       prev: false,
       next: true,
       nextText: 'Next',
+      showModal: false,
+      modalMessage: '',
     };
   },
   computed: {
@@ -83,7 +89,25 @@ export default {
     },
   },
   methods: {
-    handleSubmit() {},
+    ...mapActions(['resetForms']),
+    async handleSubmit() {
+      let data = this.contactForm;
+      let success = await addContact(data);
+      if (success) {
+        this.resetForms();
+        this.$data.active = 'PersonForm';
+        this.$data.prev = false;
+        this.$data.next = true;
+        this.$data.nextText = 'Next';
+        this.$data.modalMessage = 'Contact added successfully';
+        this.$data.showModal = true;
+      }
+      if (!success) {
+        this.$data.showModal = true;
+        this.$data.modalMessage =
+          'There was an error adding your contact, please try again.';
+      }
+    },
     move(direction) {
       let states = {
         PersonForm: {

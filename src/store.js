@@ -111,7 +111,13 @@ export default new Vuex.Store({
       let prop = propBuilder(propkey, state);
 
       prop = value;
-    }
+    },
+    resetForms(state) {
+      state.personForm = FORMS.personForm;
+      state.addressForm = [FORMS.addressForm];
+      state.phoneNumberForm = [FORMS.phoneNumberForm];
+      state.emailAddressForm = [FORMS.emailAddressForm];
+    },
   },
   actions: {
     addForm({
@@ -128,6 +134,11 @@ export default new Vuex.Store({
       commit
     }, payload) {
       commit('updateProp', payload);
+    },
+    resetForms({
+      commit
+    }) {
+      commit('resetForms');
     }
   },
   getters: {},
