@@ -10,80 +10,84 @@ const data = {
   personForm: {
     firstName: 'Mark',
     lastName: 'Walters',
-    dateOfBirth: '12-12-1912'
+    dateOfBirth: '12-12-1912',
   },
-  emailAddressForm: [{
-    // person_id: null
-    emailAddress: 'mwalters@example.com',
-    typeID: 1
-  }],
-  phoneNumberForm: [{
-    // person_id: null
-    phoneNumber: '888-888-888',
-    typeID: 1
-  }],
-  addressForm: [{
-    // person_id: null
-    address1: '123 South Meadow Rd',
-    address2: 'Box 23',
-    city: 'St Petersburg',
-    state: 'AK',
-    zip: 12345,
-    country: 'USA',
-    typeID: 1
-  }],
-}
+  emailAddressForm: [
+    {
+      // person_id: null
+      emailAddress: 'mwalters@example.com',
+      typeID: 1,
+    },
+  ],
+  phoneNumberForm: [
+    {
+      // person_id: null
+      phoneNumber: '888-888-888',
+      typeID: 1,
+    },
+  ],
+  addressForm: [
+    {
+      // person_id: null
+      address1: '123 South Meadow Rd',
+      address2: 'Box 23',
+      city: 'St Petersburg',
+      state: 'AK',
+      zip: 12345,
+      country: 'USA',
+      typeID: 1,
+    },
+  ],
+};
 
 function sendJSON(url = ``, data = {}, method = 'POST') {
   return fetch(url, {
-      method,
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      redirect: "manual",
-      referrer: "client",
-      body: JSON.stringify(data),
-    })
+    method,
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    redirect: 'manual',
+    referrer: 'client',
+    body: JSON.stringify(data),
+  })
     .then(response => {
       switch (method) {
         case 'POST':
           if ([200, 201].find(s => s === response.status)) {
             return response.json();
           } else {
-            throw new Error(`Failed to POST: ${url}`)
+            throw new Error(`Failed to POST: ${url}`);
           }
-          break;
         case 'GET':
           if (['200'].find(s => s === response.status)) {
             return response.json();
-          };
+          }
           break;
         case 'PUT':
           if (['200', '201'].find(s => s === response.status)) {
             return response.json();
-          };
+          }
           break;
         case 'DELETE':
           if (['200', '201'].find(s => s === response.status)) {
             return response.json();
-          };
-          break
+          }
+          break;
         default:
-          return response.json()
+          return response.json();
       }
     })
     .catch(e => {
       console.log(e);
-    })
+    });
 }
-
 
 /**
  *  API
- * 
+ *
  **/
 
 function objToSnakeCase(obj) {
@@ -125,7 +129,6 @@ function objFormatPhoneNumber(obj) {
   return newObj;
 }
 
-
 function prepData(data) {
   let newData;
 
@@ -150,18 +153,25 @@ function prepData(data) {
 }
 
 const handleRequest = async (url, data, fn) => {
-  data = await fn(url, data)
-    .then(data => data);
+  data = await fn(url, data).then(data => data);
   return data;
-}
+};
+
+const searchAPI = async data => {
+  data = objTrim(data);
+  let url = ORIGIN + '/search';
+  return handleRequest(url, data, sendJSON);
+};
 
 const addContact = async data => {
-
   let newData = {};
 
   Object.entries(data).forEach(form => {
     let [formName, formEntries] = form;
-    let url = formName.replace(/form$/i, '').replace(/([A-Z|0-9]+)/g, '-$1').toLowerCase();
+    let url = formName
+      .replace(/form$/i, '')
+      .replace(/([A-Z|0-9]+)/g, '-$1')
+      .toLowerCase();
     let postData = prepData(formEntries);
     newData[url] = postData;
   });
@@ -169,13 +179,11 @@ const addContact = async data => {
   let personID;
   try {
     let url = ORIGIN + '/person';
-    personID = await sendJSON(url, newData['person'])
-      .then(data => data.id);
+    personID = await sendJSON(url, newData['person']).then(data => data.id);
   } catch (e) {
     console.log(e);
     return false;
   }
-
 
   Object.entries(newData).forEach(async form => {
     let [path, entries] = form;
@@ -189,9 +197,9 @@ const addContact = async data => {
         entries.forEach(async entry => {
           let url = `${ORIGIN}/${path}`;
           entry['person_id'] = personID;
-          let data = await handleRequest(url, entry, sendJSON)
+          let data = await handleRequest(url, entry, sendJSON);
           if (!data.type_id) {
-            throw new Error(`Failed to POST: ${url}`)
+            throw new Error(`Failed to POST: ${url}`);
           }
         });
       } catch (e) {
@@ -204,9 +212,9 @@ const addContact = async data => {
       try {
         let url = `${ORIGIN}/${path}`;
         entries['person_id'] = personID;
-        let data = await handleRequest(url, entries, sendJSON)
+        let data = await handleRequest(url, entries, sendJSON);
         if (!data.type_id) {
-          throw new Error(`Failed to POST: ${url}`)
+          throw new Error(`Failed to POST: ${url}`);
         }
       } catch (e) {
         console.log(e);
@@ -218,7 +226,4 @@ const addContact = async data => {
   return true;
 };
 
-
-export {
-  addContact
-};
+export { addContact, searchAPI };

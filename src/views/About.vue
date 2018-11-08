@@ -1,5 +1,16 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div>
+    <h1>Search Contacts</h1>
+    <SearchForm />
   </div>
 </template>
+<script>
+import SearchForm from '@/components/SearchForm.vue';
+
+export default {
+  name: 'home',
+  components: {
+    SearchForm,
+  },
+};
+</script>
