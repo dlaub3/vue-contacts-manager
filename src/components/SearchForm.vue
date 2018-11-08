@@ -2,29 +2,24 @@
   <div id="search">
     <form>
         <input 
-          v-model="form.firstName"
+          v-model="firstName"
           placeholder="First Name" 
-          type="text" autofocus required 
-          @keyup="updateProp({propkey: 'personForm', value: form})"
+          type="text"
         />
         <input 
-          v-model="form.lastName"
+          v-model="lastName"
           placeholder="Last Name" 
           type="text" 
         />
-        <input 
-          v-model="form.dateOfBirth"
-          placeholder="Date Of Birth" 
-          type="text" 
-          @keyup="updateProp({propkey: 'personForm', value: form})"
-        />
     </form>
       <button @click="search">Search</button>
+    <Table v-if="data" :data="data" />
   </div>
 </template>
 
 <script>
 import Select from '@/components/Select.vue';
+import Table from '@/components/Table.vue';
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
@@ -36,7 +31,9 @@ export default {
   props: {},
   data() {
     return {
-      searchWord: '',
+      firstName: '',
+      lastName: '',
+      data: false,
       selectedOption: 1,
       options: [
         {
@@ -71,15 +68,15 @@ export default {
     };
   },
   components: {
-    Select,
+    Table,
   },
   methods: {
     async search() {
-      let type = this.$data.selectedOption;
-      let string = this.$data.searchWord;
-      let data = { type, string };
+      let firstName = this.$data.firstName;
+      let lastName = this.$data.lastName;
+      let data = { firstName, lastName };
       data = await searchAPI(data);
-      console.log(data);
+      this.$data.data = JSON.parse(data);
     },
     setSelected(selected) {
       this.$data.selectedOption = selected;

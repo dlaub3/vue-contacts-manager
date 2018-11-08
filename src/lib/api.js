@@ -12,47 +12,43 @@ const data = {
     lastName: 'Walters',
     dateOfBirth: '12-12-1912',
   },
-  emailAddressForm: [
-    {
-      // person_id: null
-      emailAddress: 'mwalters@example.com',
-      typeID: 1,
-    },
-  ],
-  phoneNumberForm: [
-    {
-      // person_id: null
-      phoneNumber: '888-888-888',
-      typeID: 1,
-    },
-  ],
-  addressForm: [
-    {
-      // person_id: null
-      address1: '123 South Meadow Rd',
-      address2: 'Box 23',
-      city: 'St Petersburg',
-      state: 'AK',
-      zip: 12345,
-      country: 'USA',
-      typeID: 1,
-    },
-  ],
+  emailAddressForm: [{
+    // person_id: null
+    emailAddress: 'mwalters@example.com',
+    typeID: 1,
+  }, ],
+  phoneNumberForm: [{
+    // person_id: null
+    phoneNumber: '888-888-888',
+    typeID: 1,
+  }, ],
+  addressForm: [{
+    // person_id: null
+    address1: '123 South Meadow Rd',
+    address2: 'Box 23',
+    city: 'St Petersburg',
+    state: 'AK',
+    zip: 12345,
+    country: 'USA',
+    typeID: 1,
+  }, ],
 };
 
 function sendJSON(url = ``, data = {}, method = 'POST') {
+  let body = data ? JSON.stringify(data) : undefined;
+
   return fetch(url, {
-    method,
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    redirect: 'manual',
-    referrer: 'client',
-    body: JSON.stringify(data),
-  })
+      method,
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      redirect: 'manual',
+      referrer: 'client',
+      body
+    })
     .then(response => {
       switch (method) {
         case 'POST':
@@ -62,7 +58,7 @@ function sendJSON(url = ``, data = {}, method = 'POST') {
             throw new Error(`Failed to POST: ${url}`);
           }
         case 'GET':
-          if (['200'].find(s => s === response.status)) {
+          if ([200].find(s => s === response.status)) {
             return response.json();
           }
           break;
@@ -129,6 +125,18 @@ function objFormatPhoneNumber(obj) {
   return newObj;
 }
 
+function objToQueryParams(obj) {
+  let params = [];
+  for (let prop in obj) {
+    if (typeof obj[prop] === 'string') {
+      params.push(`${prop}=${obj[prop]}`);
+    } else {
+      params(objToQueryParams(obj[prop]));
+    }
+  }
+  return params.join('&');
+}
+
 function prepData(data) {
   let newData;
 
@@ -152,15 +160,17 @@ function prepData(data) {
   return newData;
 }
 
-const handleRequest = async (url, data, fn) => {
-  data = await fn(url, data).then(data => data);
+const handleRequest = async (url, data, fn, method = '') => {
+  data = await fn(url, data, method).then(data => data);
   return data;
 };
 
 const searchAPI = async data => {
   data = objTrim(data);
-  let url = ORIGIN + '/search';
-  return handleRequest(url, data, sendJSON);
+  data = objToSnakeCase(data);
+  let params = objToQueryParams(data);
+  let url = ORIGIN + '/person?' + params;
+  return await handleRequest(url, null, sendJSON, 'GET');
 };
 
 const addContact = async data => {
@@ -226,4 +236,7 @@ const addContact = async data => {
   return true;
 };
 
-export { addContact, searchAPI };
+export {
+  addContact,
+  searchAPI
+};
