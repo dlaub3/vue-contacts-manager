@@ -1,3 +1,5 @@
+import * as obj from './objHelpers';
+
 const ORIGIN = 'http://localhost:5000';
 
 function sendJSON(url = ``, data = false, method = 'POST') {
@@ -55,73 +57,6 @@ function sendJSON(url = ``, data = false, method = 'POST') {
  *
  **/
 
-function objToSnakeCase(obj) {
-  let newObj = {};
-  for (let prop in obj) {
-    let newProp = prop.replace(/([A-Z|0-9]+)/g, '_$1').toLowerCase();
-    newObj[newProp] = obj[prop];
-  }
-  return newObj;
-}
-
-function objToCamelCase(obj) {
-  let newObj = {};
-  for (let prop in obj) {
-    let newProp = prop.replace(/_./g, (m) => m.replace(/_/, '').toUpperCase());
-    newObj[newProp] = obj[prop];
-  }
-  return newObj;
-}
-
-function objTrim(obj) {
-  let newObj = {};
-  for (let prop in obj) {
-    if (typeof obj[prop] === 'string') {
-      newObj[prop] = obj[prop].trim();
-    } else {
-      newObj[prop] = obj[prop];
-    }
-  }
-  return newObj;
-}
-
-function objPhoneToDigits(obj) {
-  let newObj = {};
-  for (let prop in obj) {
-    if (prop === 'phone_number' || 'phoneNumber') {
-      let value = obj[prop].replace(/\D/g, '');
-      newObj[prop] = Number(value);
-    } else {
-      newObj[prop] = obj[prop];
-    }
-  }
-  return newObj;
-}
-
-function objDigitsToPhone(obj) {
-  let newObj = {};
-  for (let prop in obj) {
-    if (prop === 'phone_number' || prop === 'phoneNumber') {
-      let value = obj[prop].replace(/(....)$/, '-$1')
-        .replace(/(...-)/, '-$1')
-        .replace(/(...-)/, '-$1');
-      newObj[prop] = value;
-    }
-  }
-  return newObj;
-}
-
-function objToQueryParams(obj) {
-  let params = [];
-  for (let prop in obj) {
-    if (typeof obj[prop] === 'string') {
-      params.push(`${prop}=${obj[prop]}`);
-    } else {
-      params(objToQueryParams(obj[prop]));
-    }
-  }
-  return params.join('&');
-}
 
 function prepData(data) {
   let newData;
@@ -129,17 +64,15 @@ function prepData(data) {
   if (data.constructor === Array) {
     newData = [];
     data.forEach(obj => {
-      obj = objToSnakeCase(obj);
-      obj = objTrim(obj);
-      obj = objPhoneToDigits(obj);
+      obj = obj.trim(obj);
+      obj = obj.phoneToDigits(obj);
       newData.push(obj);
     });
   }
 
   if (data.constructor === Object) {
-    data = objToSnakeCase(data);
-    data = objTrim(data);
-    data = objPhoneToDigits(data);
+    data = obj.trim(data);
+    data = obj.phoneToDigits(data);
     newData = data;
   }
 
@@ -151,41 +84,19 @@ const handleRequest = async (url, data, fn, method = '') => {
   return data;
 };
 
-const searchAPI = async query => {
+export const searchAPI = async query => {
   let url = ORIGIN + `/api/person?q={"filters":${query}}`;
   console.log(url);
   return await handleRequest(url, null, sendJSON, 'GET');
 };
 
-function processContact(data) {
-  let newData;
-  if (data.constructor === Array) {
-    newData = [];
-    data.forEach(obj => {
-      obj = objDigitsToPhone(data);
-      newData.push(obj);
-    });
-  }
 
-  if (data.constructor === Object) {
-    data = objDigitsToPhone(data);
-    newData = data;
-  }
-  return newData;
-}
-
-const loadContact = async id => {
-  let url = ORIGIN + '/api/person/' + id;
-  let data = await handleRequest(url, null, sendJSON, 'GET');
-  return data;
-};
-
-
-
-const addContact = async data => {
+export const addContact = async data => {
+  data = prepData(data);
   try {
     let url = ORIGIN + '/api/person';
     let person = await sendJSON(url, data).then(data => data);
+    console.log(person);
     if (!person.id) {
       throw new Error(`Failed to POST: ${url}`)
     };
@@ -197,7 +108,14 @@ const addContact = async data => {
   return true;
 };
 
-const updateContact = async (id, data) => {
+
+export const getContact = async id => {
+  let url = ORIGIN + '/api/person/' + id;
+  let data = await handleRequest(url, null, sendJSON, 'GET');
+  return data;
+};
+
+export const updateContact = async (id, data) => {
   try {
     let url = ORIGIN + '/api/person/' + id;
     let person = await sendJSON(url, data, 'PUT').then(data => data);
@@ -211,12 +129,4 @@ const updateContact = async (id, data) => {
   }
 
   return data;
-};
-
-
-export {
-  addContact,
-  searchAPI,
-  loadContact,
-  updateContact
 };

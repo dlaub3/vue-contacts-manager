@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import {
-  loadContact
+  getContact
 } from '@/lib/api';
 
 Vue.use(Vuex);
@@ -115,7 +115,7 @@ export default new Vuex.Store({
       state.phone_numbers = [FORMS.phone_numbers];
       state.email_addresses = [FORMS.email_addresses];
     },
-    loadContact(state, payload) {
+    getContact(state, payload) {
       state.contact = payload;
     }
   },
@@ -140,11 +140,11 @@ export default new Vuex.Store({
     }) {
       commit('resetForms');
     },
-    async loadContact({
+    async getContact({
       commit
     }, id) {
-      let contact = await loadContact(id);
-      commit('loadContact', contact);
+      let contact = await getContact(id);
+      commit('getContact', contact);
     }
   },
   getters: {},

@@ -52,9 +52,9 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(['resetForms', 'loadContact']),
+    ...mapActions(['resetForms', 'getContact']),
     fetchData() {
-      this.loadContact(this.$route.params.id);
+      this.getContact(this.$route.params.id);
     },
     updateContact() {
       updateContact(this.contact.id, this.contact);
@@ -64,7 +64,7 @@ export default {
     $route: 'fetchData',
   },
   created() {
-    this.loadContact(this.$route.params.id);
+    this.getContact(this.$route.params.id);
   },
 };
 </script>
