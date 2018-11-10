@@ -84,7 +84,6 @@ export default {
     async search() {
       let query = JSON.stringify(this.query);
       let data = await searchAPI(query);
-      console.log(data);
       this.$data.data = data.objects;
     },
     setSelected(selected) {

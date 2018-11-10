@@ -12,7 +12,7 @@
       <tr :key="index + 'r'" v-for="(row, index) in data">
         <td :key="index + 'd'" v-for="(key, index) in columns">
           <!-- <Table :layout="'vertical'" :columns="columnsMap[key]" :data="row[key]" v-if="row[key].constructor === Array" /> -->
-          <div>{{row[key]}}</div>
+          <router-link :to="'/contact/' + row.id">{{row[key]}}</router-link>
         </td>
       </tr>
       </tbody>
@@ -79,11 +79,7 @@ export default {
   methods: {
     ...mapActions([]),
   },
-  watch: {
-    data() {
-      console.log(this.$props.data);
-    },
-  },
+  watch: {},
 };
 </script>
 
