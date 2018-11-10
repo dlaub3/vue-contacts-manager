@@ -1,54 +1,23 @@
 const ORIGIN = 'http://localhost:5000';
 
-// - /person
-// - /address
-// - /email
-// - /phone
-// - /type
+function sendJSON(url = ``, data = false, method = 'POST') {
+  let params = {
+    method,
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    redirect: 'manual',
+    referrer: 'client',
+  };
 
-const data = {
-  personForm: {
-    firstName: 'Mark',
-    lastName: 'Walters',
-    dateOfBirth: '12-12-1912',
-  },
-  emailAddressForm: [{
-    // person_id: null
-    emailAddress: 'mwalters@example.com',
-    type_id: 1,
-  }, ],
-  phoneNumberForm: [{
-    // person_id: null
-    phoneNumber: '888-888-888',
-    type_id: 1,
-  }, ],
-  addressForm: [{
-    // person_id: null
-    address1: '123 South Meadow Rd',
-    address2: 'Box 23',
-    city: 'St Petersburg',
-    state: 'AK',
-    zip: 12345,
-    country: 'USA',
-    type_id: 1,
-  }, ],
-};
+  if (data) {
+    params.body = JSON.stringify(data);
+  }
 
-function sendJSON(url = ``, data = {}, method = 'POST') {
-  let body = data ? JSON.stringify(data) : undefined;
-
-  return fetch(url, {
-      method,
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-      redirect: 'manual',
-      referrer: 'client',
-      body
-    })
+  return fetch(url, params)
     .then(response => {
       switch (method) {
         case 'POST':
@@ -63,12 +32,12 @@ function sendJSON(url = ``, data = {}, method = 'POST') {
           }
           break;
         case 'PUT':
-          if (['200', '201'].find(s => s === response.status)) {
+          if ([200, 201].find(s => s === response.status)) {
             return response.json();
           }
           break;
         case 'DELETE':
-          if (['200', '201'].find(s => s === response.status)) {
+          if ([200, 201].find(s => s === response.status)) {
             return response.json();
           }
           break;
@@ -182,11 +151,9 @@ const handleRequest = async (url, data, fn, method = '') => {
   return data;
 };
 
-const searchAPI = async data => {
-  data = objTrim(data);
-  data = objToSnakeCase(data);
-  let params = objToQueryParams(data);
-  let url = ORIGIN + '/person?' + params;
+const searchAPI = async query => {
+  let url = ORIGIN + `/api/person?q={"filters":${query}}`;
+  console.log(url);
   return await handleRequest(url, null, sendJSON, 'GET');
 };
 
@@ -208,28 +175,12 @@ function processContact(data) {
 }
 
 const loadContact = async id => {
-  let url = ORIGIN + '/person/' + id;
+  let url = ORIGIN + '/api/person/' + id;
   let data = await handleRequest(url, null, sendJSON, 'GET');
-
-  let newData = {},
-    person = {};
-  for (let prop in data) {
-    if (typeof data[prop] === 'string' ||
-      typeof data[prop] === 'number') {
-      person[prop] = data[prop];
-    } else {
-      newData[prop] = data[prop];
-    }
-  }
-  newData['person'] = person;
-
-
-
+  return data;
 };
 
-const transformProps = data => {
 
-}
 
 const addContact = async data => {
   try {
@@ -246,9 +197,26 @@ const addContact = async data => {
   return true;
 };
 
+const updateContact = async (id, data) => {
+  try {
+    let url = ORIGIN + '/api/person/' + id;
+    let person = await sendJSON(url, data, 'PUT').then(data => data);
+    console.log(person);
+    if (!person.id) {
+      throw new Error(`Failed to POST: ${url}`);
+    };
+  } catch (e) {
+    console.log(e);
+    return {};
+  }
+
+  return data;
+};
+
 
 export {
   addContact,
   searchAPI,
-  loadContact
+  loadContact,
+  updateContact
 };

@@ -110,21 +110,13 @@ export default new Vuex.Store({
       prop = value;
     },
     resetForms(state) {
-      state.personForm = FORMS.personForm;
-      state.addressForm = [FORMS.addressForm];
-      state.phoneNumberForm = [FORMS.phoneNumberForm];
-      state.emailAddressForm = [FORMS.emailAddressForm];
+      state.person = FORMS.person;
+      state.addresses = [FORMS.addresses];
+      state.phone_numbers = [FORMS.phone_numbers];
+      state.email_addresses = [FORMS.email_addresses];
     },
-    loadContact(state, obj) {
-      let person = {};
-      for (let prop in obj) {
-        if (typeof obj[prop] === 'string') {
-          person[prop] = obj[prop];
-        } else {
-          prop = prop.replace(/(ss)s$|es$|(er)s$/, '$1$2');
-          state[prop] = obj[prop];
-        }
-      }
+    loadContact(state, payload) {
+      state.contact = payload;
     }
   },
   actions: {
@@ -148,11 +140,11 @@ export default new Vuex.Store({
     }) {
       commit('resetForms');
     },
-    loadContact({
+    async loadContact({
       commit
     }, id) {
-      let contact = loadContact(id);
-      // commit('loadContact', contact);
+      let contact = await loadContact(id);
+      commit('loadContact', contact);
     }
   },
   getters: {},

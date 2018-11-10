@@ -1,17 +1,18 @@
 <template>
   <div>
-    <table>
+    <table :class="layout">
       <thead>
       <tr>
-        <th  :key="index + 'h'" v-for="(key, index) in Object.keys(data[0])">
-          {{ key.replace(/_/g, ' ').toLowerCase()}}
+        <th :key="index" v-for="(header, index) in columns">
+          {{header.replace(/_/g, ' ')}}
         </th>
       </tr>
       </thead>
       <tbody>
       <tr :key="index + 'r'" v-for="(row, index) in data">
-        <td :key="index + 'd'" v-for="(value, index) in Object.values(row)">
-          {{value}}
+        <td :key="index + 'd'" v-for="(key, index) in columns">
+          <!-- <Table :layout="'vertical'" :columns="columnsMap[key]" :data="row[key]" v-if="row[key].constructor === Array" /> -->
+          <div>{{row[key]}}</div>
         </td>
       </tr>
       </tbody>
@@ -33,6 +34,42 @@ export default {
         return [];
       },
     },
+    columns: {
+      type: Array,
+      default() {
+        return [
+          'id',
+          'first_name',
+          'last_name',
+          'date_of_birth',
+          // 'email_addresses',
+          // 'phone_numbers',
+          // 'addresses',
+        ];
+      },
+    },
+    layout: {
+      type: String,
+      default: 'horizontal',
+    },
+  },
+  data() {
+    return {
+      columnsMap: {
+        email_addresses: ['id', 'email_address', 'type_id'],
+        phone_numbers: ['id', 'phone_number', 'type_id'],
+        addresses: [
+          'id',
+          'address_1',
+          'address_2',
+          'city',
+          'state',
+          'zip',
+          'country',
+          'type_id',
+        ],
+      },
+    };
   },
   components: {},
   computed: {
@@ -65,5 +102,23 @@ tbody tr:nth-child(1n) {
 
 tbody tr:nth-child(2n) {
   background: lightgrey;
+}
+
+.vertical {
+  display: flex;
+}
+
+.vertical thead tr {
+  display: flex;
+  flex-direction: column;
+}
+
+.vertical tbody tr {
+  display: flex;
+  flex-direction: column;
+}
+
+.vertical tbody tr td {
+  display: flex;
 }
 </style>

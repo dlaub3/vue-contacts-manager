@@ -67,16 +67,25 @@ export default {
       ],
     };
   },
+  computed: {
+    query: {
+      get() {
+        return [
+          { name: 'first_name', op: 'ilike', val: `%${this.firstName}%` },
+          { name: 'last_name', op: 'ilike', val: `%${this.lastName}%` },
+        ];
+      },
+    },
+  },
   components: {
     Table,
   },
   methods: {
     async search() {
-      let firstName = this.$data.firstName;
-      let lastName = this.$data.lastName;
-      let data = { firstName, lastName };
-      data = await searchAPI(data);
-      this.$data.data = data;
+      let query = JSON.stringify(this.query);
+      let data = await searchAPI(query);
+      console.log(data);
+      this.$data.data = data.objects;
     },
     setSelected(selected) {
       this.$data.selectedOption = selected;

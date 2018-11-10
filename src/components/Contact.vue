@@ -7,6 +7,10 @@
           <PhoneNumberForm />
           <AddressForm/>
 
+          <div>
+            <button v-if="!next" @click="updateContact">Update</button>
+          </div>
+
     </div>
 </template>
 
@@ -19,11 +23,16 @@ import PersonForm from '@/components/PersonForm.vue';
 import EmailAddressForm from '@/components/EmailAddressForm.vue';
 import PhoneNumberForm from '@/components/PhoneNumberForm.vue';
 import AddressForm from '@/components/AddressForm.vue';
-// import { addContact } from '@/lib/api';
+import { updateContact } from '@/lib/api';
 
 export default {
   name: 'Contact',
-  props: {},
+  props: {
+    id: {
+      type: String,
+      default: '',
+    },
+  },
   components: {
     ModalMessage,
     PersonForm,
@@ -38,24 +47,24 @@ export default {
     };
   },
   computed: {
-    contactForm: {
-      get() {
-        return {
-          personForm: this.$store.state.personForm,
-          emailAddressForm: this.$store.state.emailAddressForm,
-          phoneNumberForm: this.$store.state.phoneNumberForm,
-          addressForm: this.$store.state.addressForm,
-        };
-      },
-    },
+    ...mapState({
+      contact: state => state.contact,
+    }),
   },
   methods: {
     ...mapActions(['resetForms', 'loadContact']),
-    async handleSubmit() {},
+    fetchData() {
+      this.loadContact(this.$route.params.id);
+    },
+    updateContact() {
+      updateContact(this.contact.id, this.contact);
+    },
   },
-  mounted() {
-    console.log(this.$pops);
-    this.loadContact(20);
+  watch: {
+    $route: 'fetchData',
+  },
+  created() {
+    this.loadContact(this.$route.params.id);
   },
 };
 </script>
