@@ -1,21 +1,21 @@
 <template>
     <form>
         <input 
-          v-model="form.firstName"
+          v-model="form.first_name"
           placeholder="First Name" 
           type="text" autofocus required 
-          @keyup="updateProp({propkey: 'personForm', value: form})"
+          @keyup="updateProp({propkey: 'contact', value: form})"
         />
         <input 
-          v-model="form.lastName"
+          v-model="form.last_name"
           placeholder="Last Name" 
           type="text" 
         />
         <input 
-          v-model="form.dateOfBirth"
+          v-model="form.date_of_birth"
           placeholder="Date Of Birth" 
           type="text" 
-          @keyup="updateProp({propkey: 'personForm', value: form})"
+          @keyup="updateProp({propkey: 'contact', value: form})"
         />
     </form>
 </template>
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     ...mapState({
-      form: state => state.personForm,
+      form: state => state.contact,
     }),
   },
   methods: {

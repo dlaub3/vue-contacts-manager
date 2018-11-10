@@ -76,7 +76,7 @@ export default {
       let lastName = this.$data.lastName;
       let data = { firstName, lastName };
       data = await searchAPI(data);
-      this.$data.data = JSON.parse(data);
+      this.$data.data = data;
     },
     setSelected(selected) {
       this.$data.selectedOption = selected;

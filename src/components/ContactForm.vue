@@ -68,30 +68,23 @@ export default {
   },
   data() {
     return {
-      active: 'PersonForm',
+      active: 'Review',
       prev: false,
-      next: true,
+      next: false,
       nextText: 'Next',
       showModal: false,
       modalMessage: '',
     };
   },
   computed: {
-    contactForm: {
-      get() {
-        return {
-          personForm: this.$store.state.personForm,
-          emailAddressForm: this.$store.state.emailAddressForm,
-          phoneNumberForm: this.$store.state.phoneNumberForm,
-          addressForm: this.$store.state.addressForm,
-        };
-      },
-    },
+    ...mapState({
+      contact: state => state.contact,
+    }),
   },
   methods: {
     ...mapActions(['resetForms']),
     async handleSubmit() {
-      let data = this.contactForm;
+      let data = this.contact;
       let success = await addContact(data);
       if (success) {
         this.resetForms();

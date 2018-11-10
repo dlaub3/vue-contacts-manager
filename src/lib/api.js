@@ -15,12 +15,12 @@ const data = {
   emailAddressForm: [{
     // person_id: null
     emailAddress: 'mwalters@example.com',
-    typeID: 1,
+    type_id: 1,
   }, ],
   phoneNumberForm: [{
     // person_id: null
     phoneNumber: '888-888-888',
-    typeID: 1,
+    type_id: 1,
   }, ],
   addressForm: [{
     // person_id: null
@@ -30,7 +30,7 @@ const data = {
     state: 'AK',
     zip: 12345,
     country: 'USA',
-    typeID: 1,
+    type_id: 1,
   }, ],
 };
 
@@ -90,12 +90,16 @@ function objToSnakeCase(obj) {
   let newObj = {};
   for (let prop in obj) {
     let newProp = prop.replace(/([A-Z|0-9]+)/g, '_$1').toLowerCase();
+    newObj[newProp] = obj[prop];
+  }
+  return newObj;
+}
 
-    if (typeof obj[prop] === 'string') {
-      newObj[newProp] = obj[prop];
-    } else {
-      newObj[newProp] = obj[prop];
-    }
+function objToCamelCase(obj) {
+  let newObj = {};
+  for (let prop in obj) {
+    let newProp = prop.replace(/_./g, (m) => m.replace(/_/, '').toUpperCase());
+    newObj[newProp] = obj[prop];
   }
   return newObj;
 }
@@ -112,14 +116,27 @@ function objTrim(obj) {
   return newObj;
 }
 
-function objFormatPhoneNumber(obj) {
+function objPhoneToDigits(obj) {
   let newObj = {};
   for (let prop in obj) {
-    if (prop === 'phone_number') {
+    if (prop === 'phone_number' || 'phoneNumber') {
       let value = obj[prop].replace(/\D/g, '');
       newObj[prop] = Number(value);
     } else {
       newObj[prop] = obj[prop];
+    }
+  }
+  return newObj;
+}
+
+function objDigitsToPhone(obj) {
+  let newObj = {};
+  for (let prop in obj) {
+    if (prop === 'phone_number' || prop === 'phoneNumber') {
+      let value = obj[prop].replace(/(....)$/, '-$1')
+        .replace(/(...-)/, '-$1')
+        .replace(/(...-)/, '-$1');
+      newObj[prop] = value;
     }
   }
   return newObj;
@@ -145,7 +162,7 @@ function prepData(data) {
     data.forEach(obj => {
       obj = objToSnakeCase(obj);
       obj = objTrim(obj);
-      obj = objFormatPhoneNumber(obj);
+      obj = objPhoneToDigits(obj);
       newData.push(obj);
     });
   }
@@ -153,7 +170,7 @@ function prepData(data) {
   if (data.constructor === Object) {
     data = objToSnakeCase(data);
     data = objTrim(data);
-    data = objFormatPhoneNumber(data);
+    data = objPhoneToDigits(data);
     newData = data;
   }
 
@@ -173,70 +190,65 @@ const searchAPI = async data => {
   return await handleRequest(url, null, sendJSON, 'GET');
 };
 
+function processContact(data) {
+  let newData;
+  if (data.constructor === Array) {
+    newData = [];
+    data.forEach(obj => {
+      obj = objDigitsToPhone(data);
+      newData.push(obj);
+    });
+  }
+
+  if (data.constructor === Object) {
+    data = objDigitsToPhone(data);
+    newData = data;
+  }
+  return newData;
+}
+
+const loadContact = async id => {
+  let url = ORIGIN + '/person/' + id;
+  let data = await handleRequest(url, null, sendJSON, 'GET');
+
+  let newData = {},
+    person = {};
+  for (let prop in data) {
+    if (typeof data[prop] === 'string' ||
+      typeof data[prop] === 'number') {
+      person[prop] = data[prop];
+    } else {
+      newData[prop] = data[prop];
+    }
+  }
+  newData['person'] = person;
+
+
+
+};
+
+const transformProps = data => {
+
+}
+
 const addContact = async data => {
-  let newData = {};
-
-  Object.entries(data).forEach(form => {
-    let [formName, formEntries] = form;
-    let url = formName
-      .replace(/form$/i, '')
-      .replace(/([A-Z|0-9]+)/g, '-$1')
-      .toLowerCase();
-    let postData = prepData(formEntries);
-    newData[url] = postData;
-  });
-
-  let personID;
   try {
-    let url = ORIGIN + '/person';
-    personID = await sendJSON(url, newData['person']).then(data => data.id);
+    let url = ORIGIN + '/api/person';
+    let person = await sendJSON(url, data).then(data => data);
+    if (!person.id) {
+      throw new Error(`Failed to POST: ${url}`)
+    };
   } catch (e) {
     console.log(e);
     return false;
   }
 
-  Object.entries(newData).forEach(async form => {
-    let [path, entries] = form;
-
-    if (path === 'person') {
-      return;
-    }
-
-    if (entries.constructor === Array) {
-      try {
-        entries.forEach(async entry => {
-          let url = `${ORIGIN}/${path}`;
-          entry['person_id'] = personID;
-          let data = await handleRequest(url, entry, sendJSON);
-          if (!data.type_id) {
-            throw new Error(`Failed to POST: ${url}`);
-          }
-        });
-      } catch (e) {
-        console.log(e);
-        return false;
-      }
-    }
-
-    if (entries.constructor === Object) {
-      try {
-        let url = `${ORIGIN}/${path}`;
-        entries['person_id'] = personID;
-        let data = await handleRequest(url, entries, sendJSON);
-        if (!data.type_id) {
-          throw new Error(`Failed to POST: ${url}`);
-        }
-      } catch (e) {
-        console.log(e);
-        return false;
-      }
-    }
-  });
-
   return true;
 };
 
+
 export {
   addContact,
-  searchAPI
+  searchAPI,
+  loadContact
 };

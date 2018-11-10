@@ -1,83 +1,87 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import {
+  loadContact
+} from '@/lib/api';
 
 Vue.use(Vuex);
 
 const FORMS = {
-  personForm: {
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
+  person: {
+    first_name: '',
+    last_name: '',
+    date_of_birth: '',
   },
-  emailAddressForm: {
+  email_addresses: {
     id: null,
-    emailAddress: null,
-    typeID: -1,
+    email_address: null,
+    type_id: -1,
   },
-  phoneNumberForm: {
+  phone_numbers: {
     id: null,
-    phoneNumber: null,
-    typeID: -1,
+    phone_number: null,
+    type_id: -1,
   },
-  addressForm: {
-    address1: null,
-    address2: null,
+  addresses: {
+    address_1: null,
+    address_2: null,
     city: null,
     state: null,
+    country: null,
     zip: null,
-    typeID: -1,
+    type_id: -1,
   }
 }
 
 export default new Vuex.Store({
   state: {
-    typeSelectOptions: [{
+    types: [{
         id: 1,
-        text: 'Primary'
+        text: 'Primary',
       },
       {
         id: 2,
-        text: 'Secondary'
+        text: 'Secondary',
       },
       {
         id: 3,
-        text: 'Home'
+        text: 'Home',
       }
     ],
-    addressForm: [{
-      address1: '123 South Lane',
-      address2: 'Box 109',
-      city: 'Pleasant City',
-      state: 'SD',
-      zip: '46729',
-      typeID: 1
-    }],
-    emailAddressForm: [{
-      id: 1,
-      emailAddress: 'person1@example.com',
-      typeID: 1
-    }, ],
-    phoneNumberForm: [{
-      id: 1,
-      phoneNumber: '888-888-8888',
-      typeID: 1,
-    }],
-    personForm: {
-      firstName: 'Sam',
-      lastName: 'Waters',
-      dateOfBirth: '11-11-1911'
-    },
-    contactForm: {},
-
+    contact: {
+      addresses: [{
+        address_1: '123 South Lane',
+        address_2: 'Box 109',
+        city: 'Pleasant City',
+        state: 'SD',
+        country: 'USA',
+        zip: '46729',
+        type_id: 1,
+      }],
+      email_addresses: [{
+        id: 1,
+        email_address: 'person1@example.com',
+        type_id: 1,
+      }, ],
+      phone_numbers: [{
+        id: 1,
+        phone_number: '888-888-8888',
+        type_id: 1,
+      }],
+      first_name: 'Sam',
+      last_name: 'Waters',
+      date_of_birth: '11-11-1911',
+    }
   },
   mutations: {
-    addForm(state, form) {
-      let forms = state[form];
+    addForm(state, formKey) {
+      let forms = propBuilder(formKey, state);
       let id = forms.length + 1;
-      let newForm = FORMS[form];
+      let formName = formKey.split('.').pop();
+      let newForm = FORMS[formName];
       newForm.id = id;
-      state[form] = [...state[form], { ...newForm
-      }];
+      forms.push({ ...newForm
+      });
     },
     updateForm(state, payload) {
       let {
@@ -85,28 +89,21 @@ export default new Vuex.Store({
         form,
         field
       } = payload;
-      let forms = state[form];
+
+      let forms = propBuilder(form, state);
+
       forms.forEach(form => {
         if (form.id === id) {
           form[field] = payload[field];
         }
       });
 
-      state[form] = forms;
     },
     updateProp(state, payload) {
       let {
         propkey,
         value
       } = payload;
-
-      function propBuilder(str, state) {
-        let props = str.split('.');
-        props.forEach(p => {
-          state = state[p];
-        });
-        return state;
-      }
 
       let prop = propBuilder(propkey, state);
 
@@ -118,6 +115,17 @@ export default new Vuex.Store({
       state.phoneNumberForm = [FORMS.phoneNumberForm];
       state.emailAddressForm = [FORMS.emailAddressForm];
     },
+    loadContact(state, obj) {
+      let person = {};
+      for (let prop in obj) {
+        if (typeof obj[prop] === 'string') {
+          person[prop] = obj[prop];
+        } else {
+          prop = prop.replace(/(ss)s$|es$|(er)s$/, '$1$2');
+          state[prop] = obj[prop];
+        }
+      }
+    }
   },
   actions: {
     addForm({
@@ -139,7 +147,21 @@ export default new Vuex.Store({
       commit
     }) {
       commit('resetForms');
+    },
+    loadContact({
+      commit
+    }, id) {
+      let contact = loadContact(id);
+      // commit('loadContact', contact);
     }
   },
   getters: {},
 });
+
+function propBuilder(str, state) {
+  let props = str.split('.');
+  props.forEach(p => {
+    state = state[p];
+  });
+  return state;
+}

@@ -2,20 +2,20 @@
   <div>
     <form v-for="form in forms" v-bind:key="form.id">
       <input  
-        v-model="form.phoneNumber" 
-				type="email"
-				placeholder="Email Address" 
+        v-model="form.phone_number" 
+				type="tel"
+				placeholder="Phone Number" 
 				required
-				@keyup="updateForm({ form: 'phoneNumberForm', id: form.id, phoneNumber: form.phoneNumber, field: 'phoneNumber' })" 
+				@keyup="updateForm({ form: stateKey, id: form.id, phone_number: form.phone_number, field: 'phone_number' })" 
 			/>
       <Select 
-      	:message="'Select email type'" 
-				:selectedOption="form.typeID" 
+      	:message="'Select phone type'"  
+				:selectedOption="form.type_id" 
 				:options="options" 
-				v-on:option-selected="updateForm({ form: 'phoneNumberForm', id: form.id, typeID: $event, field: 'typeID'})"
+				v-on:option-selected="updateForm({ form: stateKey, id: form.id, type_id: $event, field: 'type_id'})"
 			/>
     </form>
-      <button @click="addForm('phoneNumberForm')">Add Emial Address</button>
+      <button @click="addForm(stateKey)">Add Phone Number</button>
   </div>
 </template>
 
@@ -32,10 +32,15 @@ export default {
   components: {
     Select,
   },
+  data() {
+    return {
+      stateKey: 'contact.phone_numbers',
+    };
+  },
   computed: {
     ...mapState({
-      forms: state => state.phoneNumberForm,
-      options: state => state.typeSelectOptions,
+      forms: state => state.contact.phone_numbers,
+      options: state => state.types,
     }),
   },
   methods: {

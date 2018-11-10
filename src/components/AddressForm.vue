@@ -2,43 +2,49 @@
   <div>
     <form v-for="form in forms" v-bind:key="form.id">
         <input 
-          v-model="form.address1" 
+          v-model="form.address_1" 
           type="text" 
           placeholder="Address 1" 
-          @keyup="updateForm({ form: 'addressForm', id: form.id, adress1: form.adress1, field: 'adress1' })" 
+          @keyup="updateForm({ form: stateKey, id: form.id, address_1: form.address_1, field: 'adress_1' })" 
         />
-        <input 
-          v-model="form.address2" 
+        <input
+          v-model="form.address_2" 
           type="text" 
           placeholder="Address 2"
-          @keyup="updateForm({ form: 'addressForm', id: form.id, adress2: form.adress2, field: 'adress2' })" 
+          @keyup="updateForm({ form: stateKey, id: form.id, address_2: form.address_2, field: 'adress_2' })" 
         />
         <input 
           v-model="form.city" 
           type="text" 
           placeholder="City"
-          @keyup="updateForm({ form: 'addressForm', id: form.id, city: form.city, field: 'city' })" 
+          @keyup="updateForm({ form: stateKey, id: form.id, city: form.city, field: 'city' })" 
         />
         <input 
           v-model="form.state" 
           type="text" 
           placeholder="State"
-          @keyup="updateForm({ form: 'addressForm', id: form.id, state: form.state, field: 'state' })" 
+          @keyup="updateForm({ form: stateKey, id: form.id, state: form.state, field: 'state' })" 
         >
         <input 
           v-model="form.zip" 
           type="text" 
           placeholder="Zip"
-          @keyup="updateForm({ form: 'addressForm', id: form.id, zip: form.zip, field: 'zip' })" 
+          @keyup="updateForm({ form: stateKey, id: form.id, zip: form.zip, field: 'zip' })" 
+          />
+        <input 
+          v-model="form.country"
+          type="text" 
+          placeholder="Country"
+          @keyup="updateForm({ form: stateKey, id: form.id, country: form.country, field: 'country' })" 
           />
         <Select
           :message="'Select email type'" 
-          :selectedOption="form.typeID" 
+          :selectedOption="form.type_id" 
           :options="options"
-				  v-on:option-selected="updateForm({ form: 'addressForm', id: form.id, typeID: $event, field: 'typeID'})" 
+				  v-on:option-selected="updateForm({ form: stateKey, id: form.id, type_id: $event, field: 'type_id'})" 
         />
     </form>
-      <button @click="addForm('addressForm')">Add Emial Address</button>
+      <button @click="addForm(stateKey)">Add Address</button>
   </div>
 </template>
 
@@ -55,10 +61,15 @@ export default {
   components: {
     Select,
   },
+  data() {
+    return {
+      stateKey: 'contact.addresses',
+    };
+  },
   computed: {
     ...mapState({
-      forms: state => state.addressForm,
-      options: state => state.typeSelectOptions,
+      forms: state => state.contact.addresses,
+      options: state => state.types,
     }),
     ...mapGetters([]),
   },
