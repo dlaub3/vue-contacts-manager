@@ -1,21 +1,21 @@
 <template>
     <div id="form"> 
       <ModalMessage :active="showModal" @closeModal="showModal = false" :message="modalMessage"/>
-
+      <h1>Contact Details</h1>
           <PersonForm />
           <EmailAddressForm />
           <PhoneNumberForm />
           <AddressForm/>
 
           <div>
-            <button v-if="!next" @click="updateContact">Update</button>
+            <button @click="updateContact">Update</button>
           </div>
 
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
 import ModalMessage from '@/components/ModalMessage.vue';
 import PersonForm from '@/components/PersonForm.vue';
@@ -46,12 +46,13 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['searchContacts']),
     ...mapState({
       contact: state => state.contact,
     }),
   },
   methods: {
-    ...mapActions(['resetForms', 'getContact']),
+    ...mapActions(['resetForms', 'getContact', 'setState']),
     fetchData() {
       this.getContact(this.$route.params.id);
     },
@@ -63,7 +64,15 @@ export default {
     $route: 'fetchData',
   },
   created() {
-    this.getContact(this.$route.params.id);
+    let id = this.$route.params.id;
+    let contact = this.searchContacts(id);
+    if (contact.length === 1) {
+      this.setState(contact[0]);
+      console.info('Contact found! 😹');
+    } else {
+      console.info('Contact not found, fetching from server 😿');
+      this.getContact(id);
+    }
   },
 };
 </script>

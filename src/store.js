@@ -93,9 +93,6 @@ export default new Vuex.Store({
       state.contact.phone_numbers = [FORMS.phone_numbers];
       state.contact.email_addresses = [FORMS.email_addresses];
     },
-    getContact(state, payload) {
-      state.contact = payload;
-    },
     setState(state, payload) {
       let {
         key,
@@ -134,10 +131,17 @@ export default new Vuex.Store({
       commit
     }, id) {
       let contact = await getContact(id);
-      commit('getContact', contact);
+      commit('setState', {
+        key: 'contact',
+        data: contact
+      });
     },
   },
-  getters: {},
+  getters: {
+    searchContacts: state => id => {
+      return state.data.filter(contact => Number(contact.id) === Number(id));
+    },
+  },
 });
 
 function propBuilder(str, state) {

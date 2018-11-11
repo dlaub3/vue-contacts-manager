@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <h1>Add Contacts</h1>
     <ContactForm />
   </div>
 </template>

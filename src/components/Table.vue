@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <table :class="layout">
       <thead>
       <tr>
@@ -90,6 +90,9 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-top: 100px;
+}
 thead {
   background: #41b883;
   color: #fff;
