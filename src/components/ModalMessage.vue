@@ -6,8 +6,8 @@
          <div class="card">
           <div class="content">
               {{message}}
-              <button @click="$emit('closeModal')">close</button>
           </div>
+          <button @click="$emit('closeModal')">close</button>
         </div>
       </div>
   </div>
@@ -50,6 +50,8 @@ export default {
 }
 
 .card {
+  display: flex;
+  flex-direction: column;
   background: white;
   padding: 2em;
 }
@@ -57,6 +59,7 @@ export default {
 .content {
   font-size: 1.2em;
   color: black;
+  margin: 50px 0;
 }
 .modal-enter-active {
   z-index: 10;
