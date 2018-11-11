@@ -5,13 +5,13 @@
           v-model="form.address_1" 
           type="text" 
           placeholder="Address 1" 
-          @keyup="updateForm({ form: stateKey, id: form.id, address_1: form.address_1, field: 'adress_1' })" 
+          @keyup="updateForm({ form: stateKey, id: form.id, address_1: form.address_1, field: 'address_1' })" 
         />
         <input
           v-model="form.address_2" 
           type="text" 
           placeholder="Address 2"
-          @keyup="updateForm({ form: stateKey, id: form.id, address_2: form.address_2, field: 'adress_2' })" 
+          @keyup="updateForm({ form: stateKey, id: form.id, address_2: form.address_2, field: 'address_2' })" 
         />
         <input 
           v-model="form.city" 
