@@ -9,7 +9,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr :key="index + 'r'" v-for="(row, index) in data">
+      <tr :key="index + 'r'" v-for="(row, index) in tableRows">
         <td :key="index + 'd'" v-for="(key, index) in columns">
           <!-- <Table :layout="'vertical'" :columns="columnsMap[key]" :data="row[key]" v-if="row[key].constructor === Array" /> -->
           <router-link :to="'/contact/' + row.id">{{row[key]}}</router-link>
@@ -55,6 +55,7 @@ export default {
   },
   data() {
     return {
+      rows: this.data,
       columnsMap: {
         email_addresses: ['id', 'email_address', 'type_id'],
         phone_numbers: ['id', 'phone_number', 'type_id'],
@@ -73,6 +74,11 @@ export default {
   },
   components: {},
   computed: {
+    tableRows: {
+      get() {
+        return this.rows;
+      },
+    },
     ...mapState({}),
     ...mapGetters([]),
   },

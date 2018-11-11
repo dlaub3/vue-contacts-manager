@@ -15,7 +15,10 @@
       </form>
         <button class="focus" @click="search">Search</button>
     </div>
-    <Table v-if="data" :data="data" />
+    <Table v-if="data.length >= 1" :data="data" />
+    <div v-if="data.length < 1">
+      No Results Found
+    </div>
   </div>
 </template>
 
@@ -35,7 +38,6 @@ export default {
     return {
       first_name: '',
       last_name: '',
-      data: false,
       selectedOption: 1,
       options: [
         {
@@ -70,6 +72,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      data: state => state.data,
+    }),
     query: {
       get() {
         return [
@@ -83,10 +88,12 @@ export default {
     Table,
   },
   methods: {
+    ...mapActions(['setState']),
     async search() {
       let query = JSON.stringify(this.query);
       let data = await searchAPI(query);
-      this.$data.data = data.objects;
+      let payload = { key: 'data', data: data.objects };
+      this.setState(payload);
     },
     setSelected(selected) {
       this.$data.selectedOption = selected;

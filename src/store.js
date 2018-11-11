@@ -13,23 +13,23 @@ const FORMS = {
     date_of_birth: '',
   },
   email_addresses: {
-    id: null,
-    email_address: null,
-    type_id: -1,
+    id: '',
+    email_address: '',
+    type_id: '',
   },
   phone_numbers: {
-    id: null,
-    phone_number: null,
-    type_id: -1,
+    id: '',
+    phone_number: '',
+    type_id: '',
   },
   addresses: {
-    address_1: null,
-    address_2: null,
-    city: null,
-    state: null,
-    country: null,
-    zip: null,
-    type_id: -1,
+    address_1: '',
+    address_2: '',
+    city: '',
+    state: '',
+    country: '',
+    zip: '',
+    type_id: '',
   },
 };
 
@@ -48,30 +48,8 @@ export default new Vuex.Store({
         text: 'Home',
       },
     ],
-    contact: {
-      addresses: [{
-        address_1: '123 South Lane',
-        address_2: 'Box 109',
-        city: 'Pleasant City',
-        state: 'SD',
-        country: 'USA',
-        zip: '46729',
-        type_id: 1,
-      }, ],
-      email_addresses: [{
-        id: 1,
-        email_address: 'person1@example.com',
-        type_id: 1,
-      }, ],
-      phone_numbers: [{
-        id: 1,
-        phone_number: '888-888-8888',
-        type_id: 1,
-      }, ],
-      first_name: 'Sam',
-      last_name: 'Waters',
-      date_of_birth: '11-11-1911',
-    },
+    contact: {},
+    data: []
   },
   mutations: {
     addForm(state, formKey) {
@@ -118,8 +96,20 @@ export default new Vuex.Store({
     getContact(state, payload) {
       state.contact = payload;
     },
+    setState(state, payload) {
+      let {
+        key,
+        data
+      } = payload;
+      state[key] = data;
+    }
   },
   actions: {
+    setState({
+      commit
+    }, payload) {
+      commit('setState', payload);
+    },
     addForm({
       commit
     }, form) {
