@@ -1,0 +1,28 @@
+button {
+  padding: 10px 25px;
+  outline: none;
+  color: #ffffff;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  background: #41b883;
+  margin: 20px;
+  flex-grow: 1;
+  transition: all 0.3s;
+}
+
+button:hover {
+  background: #2c3e50;
+}
+
+.disabled {
+  filter: brightness(50%);
+}
+
+.important {
+  background: #b8b141;
+}
+
+.focus {
+  background: #2c3e50;
+}

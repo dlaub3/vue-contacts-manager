@@ -2,9 +2,21 @@
     <div id="form"> 
       <ModalMessage :active="showModal" @closeModal="showModal = false" :message="modalMessage"/>
       <div>
-        <button v-if="prev" @click="move('previous')">Previous</button>
-        <button v-if="next" @click="move('next')">{{nextText}}</button>
-      </div>
+      
+        <div class="nav">
+          <transition name="grow">
+            <button 
+            v-if="prev" 
+            @click="move('previous')">Previous</button>
+          </transition>
+
+          <transition name="grow">
+            <button 
+            v-if="next" 
+            :class="next ? 'focus' : ''"
+            @click="move('next')">{{nextText}}</button>
+          </transition>
+        </div>
 
       <transition name="fade">
         <div  v-if="active === 'PersonForm'">
@@ -40,7 +52,8 @@
       </transition>
 
     <div>
-      <button v-if="!next" @click="handleSubmit">Submit</button>
+      <button class="focus" v-if="!next" @click="handleSubmit">Submit</button>
+    </div>
     </div>
     </div>
 </template>
@@ -68,9 +81,9 @@ export default {
   },
   data() {
     return {
-      active: 'Review',
+      active: 'PersonForm',
       prev: false,
-      next: false,
+      next: true,
       nextText: 'Next',
       showModal: false,
       modalMessage: '',
@@ -151,6 +164,10 @@ export default {
   margin: 0 auto;
 }
 
+.nav {
+  display: flex;
+}
+
 .fade-enter-active {
   transition: opacity 0.5s;
 }
@@ -159,7 +176,21 @@ export default {
   display: none;
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.grow-enter-active {
+  transition: opacity 0.5s;
+}
+
+.grow-leave-active {
+  flex-grow: 0;
+}
+
+.grow-enter,
+.grow-leave-to {
   opacity: 0;
 }
 </style>
