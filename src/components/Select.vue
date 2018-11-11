@@ -75,18 +75,18 @@ export default {
 
 #selector .display {
   margin: 0;
-  color: #75757d;
 }
 
 #selector ul li {
-  padding: 10px 20px;
+  padding: 5px 20px;
   margin: 5px;
   border: 1px solid lightgrey;
+  background: white;
 }
 
 .options {
   position: absolute;
-  background: white;
+  background: #fbfbfb;
   left: 0;
   right: 0;
   top: 30px;
@@ -107,7 +107,8 @@ export default {
   margin-right: 15px;
 }
 
-.selected {
-  background: teal;
+#selector .selected {
+  background: #35495e;
+  color: white;
 }
 </style>
