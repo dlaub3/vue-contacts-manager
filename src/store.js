@@ -1,8 +1,6 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import {
-  getContact
-} from '@/lib/api';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import { getContact } from '@/lib/api';
 
 Vue.use(Vuex);
 
@@ -30,12 +28,13 @@ const FORMS = {
     country: null,
     zip: null,
     type_id: -1,
-  }
-}
+  },
+};
 
 export default new Vuex.Store({
   state: {
-    types: [{
+    types: [
+      {
         id: 1,
         text: 'Primary',
       },
@@ -46,32 +45,38 @@ export default new Vuex.Store({
       {
         id: 3,
         text: 'Home',
-      }
+      },
     ],
     contact: {
-      addresses: [{
-        address_1: '123 South Lane',
-        address_2: 'Box 109',
-        city: 'Pleasant City',
-        state: 'SD',
-        country: 'USA',
-        zip: '46729',
-        type_id: 1,
-      }],
-      email_addresses: [{
-        id: 1,
-        email_address: 'person1@example.com',
-        type_id: 1,
-      }, ],
-      phone_numbers: [{
-        id: 1,
-        phone_number: '888-888-8888',
-        type_id: 1,
-      }],
+      addresses: [
+        {
+          address_1: '123 South Lane',
+          address_2: 'Box 109',
+          city: 'Pleasant City',
+          state: 'SD',
+          country: 'USA',
+          zip: '46729',
+          type_id: 1,
+        },
+      ],
+      email_addresses: [
+        {
+          id: 1,
+          email_address: 'person1@example.com',
+          type_id: 1,
+        },
+      ],
+      phone_numbers: [
+        {
+          id: 1,
+          phone_number: '888-888-8888',
+          type_id: 1,
+        },
+      ],
       first_name: 'Sam',
       last_name: 'Waters',
       date_of_birth: '11-11-1911',
-    }
+    },
   },
   mutations: {
     addForm(state, formKey) {
@@ -80,15 +85,12 @@ export default new Vuex.Store({
       let formName = formKey.split('.').pop();
       let newForm = FORMS[formName];
       newForm.id = id;
-      forms.push({ ...newForm
+      forms.push({
+        ...newForm,
       });
     },
     updateForm(state, payload) {
-      let {
-        id,
-        form,
-        field
-      } = payload;
+      let { id, form, field } = payload;
 
       let forms = propBuilder(form, state);
 
@@ -97,13 +99,9 @@ export default new Vuex.Store({
           form[field] = payload[field];
         }
       });
-
     },
     updateProp(state, payload) {
-      let {
-        propkey,
-        value
-      } = payload;
+      let { propkey, value } = payload;
 
       let prop = propBuilder(propkey, state);
 
@@ -117,35 +115,25 @@ export default new Vuex.Store({
     },
     getContact(state, payload) {
       state.contact = payload;
-    }
+    },
   },
   actions: {
-    addForm({
-      commit
-    }, form) {
+    addForm({ commit }, form) {
       commit('addForm', form);
     },
-    updateForm({
-      commit
-    }, payload) {
+    updateForm({ commit }, payload) {
       commit('updateForm', payload);
     },
-    updateProp({
-      commit
-    }, payload) {
+    updateProp({ commit }, payload) {
       commit('updateProp', payload);
     },
-    resetForms({
-      commit
-    }) {
+    resetForms({ commit }) {
       commit('resetForms');
     },
-    async getContact({
-      commit
-    }, id) {
+    async getContact({ commit }, id) {
       let contact = await getContact(id);
       commit('getContact', contact);
-    }
+    },
   },
   getters: {},
 });

@@ -22,7 +22,7 @@ export function toSnakeCase(obj) {
 export function toCamelCase(obj) {
   let newObj = {};
   for (let prop in obj) {
-    let newProp = prop.replace(/_./g, (m) => m.replace(/_/, '').toUpperCase());
+    let newProp = prop.replace(/_./g, m => m.replace(/_/, '').toUpperCase());
     newObj[newProp] = obj[prop];
   }
   return newObj;
@@ -45,7 +45,8 @@ export function digitsToPhone(obj) {
   let newObj = {};
   for (let prop in obj) {
     if (prop === 'phone_number' || prop === 'phoneNumber') {
-      let value = obj[prop].replace(/(....)$/, '-$1')
+      let value = obj[prop]
+        .replace(/(....)$/, '-$1')
         .replace(/(...-)/, '-$1')
         .replace(/(...-)/, '-$1');
       newObj[prop] = value;

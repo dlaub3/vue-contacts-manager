@@ -57,7 +57,6 @@ function sendJSON(url = ``, data = false, method = 'POST') {
  *
  **/
 
-
 function prepData(data) {
   let newData;
 
@@ -90,7 +89,6 @@ export const searchAPI = async query => {
   return await handleRequest(url, null, sendJSON, 'GET');
 };
 
-
 export const addContact = async data => {
   data = prepData(data);
   try {
@@ -98,8 +96,8 @@ export const addContact = async data => {
     let person = await sendJSON(url, data).then(data => data);
     console.log(person);
     if (!person.id) {
-      throw new Error(`Failed to POST: ${url}`)
-    };
+      throw new Error(`Failed to POST: ${url}`);
+    }
   } catch (e) {
     console.log(e);
     return false;
@@ -107,7 +105,6 @@ export const addContact = async data => {
 
   return true;
 };
-
 
 export const getContact = async id => {
   let url = ORIGIN + '/api/person/' + id;
@@ -122,7 +119,7 @@ export const updateContact = async (id, data) => {
     console.log(person);
     if (!person.id) {
       throw new Error(`Failed to POST: ${url}`);
-    };
+    }
   } catch (e) {
     console.log(e);
     return {};
