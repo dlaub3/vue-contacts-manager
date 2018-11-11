@@ -2,7 +2,7 @@ import * as obj from './objHelpers';
 
 const ORIGIN = 'http://localhost:5000';
 
-function sendJSON(url = ``, data = false, method = 'POST') {
+function sendJSON(url = ``, data = false, method = 'GET') {
   let params = {
     method,
     mode: 'cors',
@@ -79,22 +79,23 @@ function prepData(data) {
 }
 
 const handleRequest = async (url, data, fn, method = '') => {
+  if (method === 'POST' || method === 'PUT') {
+    data = prepData(data);
+  }
+
   data = await fn(url, data, method).then(data => data);
   return data;
 };
 
 export const searchAPI = async query => {
   let url = ORIGIN + `/api/person?q={"filters":${query}}`;
-  console.log(url);
   return await handleRequest(url, null, sendJSON, 'GET');
 };
 
 export const addContact = async data => {
-  data = prepData(data);
   try {
     let url = ORIGIN + '/api/person';
-    let person = await sendJSON(url, data).then(data => data);
-    console.log(person);
+    let person = await sendJSON(url, data, 'POST').then(data => data);
     if (!person.id) {
       throw new Error(`Failed to POST: ${url}`);
     }
@@ -116,7 +117,6 @@ export const updateContact = async (id, data) => {
   try {
     let url = ORIGIN + '/api/person/' + id;
     let person = await sendJSON(url, data, 'PUT').then(data => data);
-    console.log(person);
     if (!person.id) {
       throw new Error(`Failed to POST: ${url}`);
     }
