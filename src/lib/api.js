@@ -57,33 +57,15 @@ function sendJSON(url = ``, data = false, method = 'GET') {
  *
  **/
 
-function prepData(data) {
-  let newData;
-
-  if (data.constructor === Array) {
-    newData = [];
-    data.forEach(obj => {
-      obj = obj.trim(obj);
-      obj = obj.phoneToDigits(obj);
-      newData.push(obj);
-    });
-  }
-
-  if (data.constructor === Object) {
-    data = obj.trim(data);
-    data = obj.phoneToDigits(data);
-    newData = data;
-  }
-
-  return newData;
-}
-
-const handleRequest = async (url, data, fn, method = '') => {
-  if (method === 'POST' || method === 'PUT') {
-    data = prepData(data);
+const handleRequest = async (url, data = '', fn, method = '') => {
+  if (data) {
+    data = obj.formatDataOut(data);
   }
 
   data = await fn(url, data, method).then(data => data);
+
+  data = obj.formatDataIn(data);
+
   return data;
 };
 
@@ -92,10 +74,17 @@ export const searchAPI = async query => {
   return await handleRequest(url, null, sendJSON, 'GET');
 };
 
+export const getContact = async id => {
+  let url = ORIGIN + '/api/person/' + id;
+  let data = await handleRequest(url, null, sendJSON, 'GET');
+  return data;
+};
+
+
 export const addContact = async data => {
   try {
     let url = ORIGIN + '/api/person';
-    let person = await sendJSON(url, data, 'POST').then(data => data);
+    let person = await handleRequest(url, data, sendJSON, 'POST');
     if (!person.id) {
       throw new Error(`Failed to POST: ${url}`);
     }
@@ -107,16 +96,10 @@ export const addContact = async data => {
   return true;
 };
 
-export const getContact = async id => {
-  let url = ORIGIN + '/api/person/' + id;
-  let data = await handleRequest(url, null, sendJSON, 'GET');
-  return data;
-};
-
 export const updateContact = async (id, data) => {
   try {
     let url = ORIGIN + '/api/person/' + id;
-    let person = await sendJSON(url, data, 'PUT').then(data => data);
+    let person = await handleRequest(url, data, sendJSON, 'PUT');
     if (!person.id) {
       throw new Error(`Failed to POST: ${url}`);
     }
