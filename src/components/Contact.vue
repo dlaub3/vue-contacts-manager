@@ -8,7 +8,7 @@
           <AddressForm/>
 
           <div>
-            <button @click="updateContact">Update</button>
+            <button class="focus" @click="updateContact">Update</button>
           </div>
 
     </div>
@@ -56,8 +56,12 @@ export default {
     fetchData() {
       this.getContact(this.$route.params.id);
     },
-    updateContact() {
-      updateContact(this.contact.id, this.contact);
+    async updateContact() {
+      let contact = await updateContact(this.contact.id, this.contact);
+      if (!contact.id) {
+        this.$data.showModal = true;
+        this.$data.modalMessage = 'Update failed, please try again.';
+      }
     },
   },
   watch: {

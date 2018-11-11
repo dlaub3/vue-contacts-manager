@@ -17,7 +17,7 @@
     </div>
     <Table v-if="data.length >= 1" :data="data" />
     <div v-if="data.length < 1">
-      No Results Found
+      {{message}}
     </div>
   </div>
 </template>
@@ -36,6 +36,7 @@ export default {
   props: {},
   data() {
     return {
+      message: '',
       first_name: '',
       last_name: '',
       selectedOption: 1,
@@ -93,6 +94,11 @@ export default {
       let query = JSON.stringify(this.query);
       let data = await searchAPI(query);
       let payload = { key: 'data', data: data.objects };
+      if (data.objects.length === 0) {
+        this.message = 'No Results Found';
+      } else {
+        this.message = '';
+      }
       this.setState(payload);
     },
     setSelected(selected) {
