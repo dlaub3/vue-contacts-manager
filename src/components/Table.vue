@@ -85,19 +85,43 @@ export default {
 
 <style scoped>
 thead {
-  background: bisque;
+  background: #41b883;
+  color: #fff;
 }
 th {
   text-transform: capitalize;
   font-size: 1.2em;
   padding: 10px 20px;
 }
+
+tbody tr td {
+  padding: 10px 20px;
+}
+
 tbody tr:nth-child(1n) {
   background: white;
 }
 
 tbody tr:nth-child(2n) {
-  background: lightgrey;
+  background: #2c3e50;
+}
+
+tbody tr a {
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+tbody tr a:hover {
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+tbody tr:nth-child(1n) a {
+  color: #2c3e50;
+}
+
+tbody tr:nth-child(2n) a {
+  color: white;
 }
 
 .vertical {

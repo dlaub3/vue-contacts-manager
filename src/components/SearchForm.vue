@@ -1,18 +1,20 @@
 <template>
   <div id="search">
-    <form>
-        <input 
-          v-model="firstName"
-          placeholder="First Name" 
-          type="text"
-        />
-        <input 
-          v-model="lastName"
-          placeholder="Last Name" 
-          type="text" 
-        />
-    </form>
-      <button @click="search">Search</button>
+    <div>
+      <form>
+          <input 
+            v-model="first_name"
+            placeholder="First Name" 
+            type="text"
+          />
+          <input 
+            v-model="last_name"
+            placeholder="Last Name" 
+            type="text" 
+          />
+      </form>
+        <button class="focus" @click="search">Search</button>
+    </div>
     <Table v-if="data" :data="data" />
   </div>
 </template>
@@ -31,8 +33,8 @@ export default {
   props: {},
   data() {
     return {
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
       data: false,
       selectedOption: 1,
       options: [
@@ -71,8 +73,8 @@ export default {
     query: {
       get() {
         return [
-          { name: 'first_name', op: 'ilike', val: `%${this.firstName}%` },
-          { name: 'last_name', op: 'ilike', val: `%${this.lastName}%` },
+          { name: 'first_name', op: 'ilike', val: `%${this.first_name}%` },
+          { name: 'last_name', op: 'ilike', val: `%${this.last_name}%` },
         ];
       },
     },
