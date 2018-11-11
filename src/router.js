@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
+import PageNotFound from "./views/PageNotFound.vue";
 import Contact from "@/components/Contact.vue";
 
 Vue.use(Router);
@@ -12,17 +13,21 @@ export default new Router({
       component: Home
     },
     {
-      path: "/about",
-      name: "about",
+      path: "/search",
+      name: "search",
       // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
+      // this generates a separate chunk (search.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import( /* webpackChunkName: "about" */ "./views/About.vue")
+        import( /* webpackChunkName: "search" */ "./views/Search.vue")
     },
     {
       path: '/contact/:id',
       component: Contact
     },
+    {
+      path: "*",
+      component: PageNotFound
+    }
   ]
 });

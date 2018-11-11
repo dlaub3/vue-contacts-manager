@@ -3,9 +3,11 @@
     <div id="nav">
       <div>
         <router-link to="/">Add Contact</router-link> |
-        <router-link to="/about">Search Contacts</router-link>
+        <router-link to="/search">Search Contacts</router-link>
       </div>
-       <img alt="Vue logo" src="./assets/logo.png">
+      <router-link to="/">
+        <img alt="Vue logo" src="./assets/logo.png">
+      </router-link>
     </div>
     <router-view/>
   </div>

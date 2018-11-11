@@ -152,6 +152,12 @@ export default {
       this.$data.nextText = states[newState]['nextText'] || 'Next';
     },
   },
+  watch: {
+    $route: 'resetForms',
+  },
+  created() {
+    this.resetForms();
+  },
 };
 </script>
 

@@ -110,10 +110,10 @@ export default new Vuex.Store({
       prop = value;
     },
     resetForms(state) {
-      state.person = FORMS.person;
-      state.addresses = [FORMS.addresses];
-      state.phone_numbers = [FORMS.phone_numbers];
-      state.email_addresses = [FORMS.email_addresses];
+      state.contact = FORMS.person;
+      state.contact.addresses = [FORMS.addresses];
+      state.contact.phone_numbers = [FORMS.phone_numbers];
+      state.contact.email_addresses = [FORMS.email_addresses];
     },
     getContact(state, payload) {
       state.contact = payload;
