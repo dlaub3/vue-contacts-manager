@@ -22,7 +22,6 @@
 <script>
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
-import { mapGetters } from 'vuex';
 import Select from '@/components/Select.vue';
 import formStyles from './formStyles.scss';
 

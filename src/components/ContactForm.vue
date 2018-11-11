@@ -61,7 +61,6 @@
 <script>
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
-import { mapGetters } from 'vuex';
 import ModalMessage from '@/components/ModalMessage.vue';
 import PersonForm from '@/components/PersonForm.vue';
 import EmailAddressForm from '@/components/EmailAddressForm.vue';
