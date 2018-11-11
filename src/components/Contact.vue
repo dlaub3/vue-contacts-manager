@@ -71,7 +71,7 @@ export default {
     let id = this.$route.params.id;
     let contact = this.searchContacts(id);
     if (contact.length === 1) {
-      this.setState(contact[0]);
+      this.setState({ key: 'contact', data: contact[0] });
       console.info('Contact found! 😹');
     } else {
       console.info('Contact not found, fetching from server 😿');

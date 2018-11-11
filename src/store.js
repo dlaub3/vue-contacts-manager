@@ -98,7 +98,15 @@ export default new Vuex.Store({
         key,
         data
       } = payload;
-      state[key] = data;
+
+      if (data.constructor === Array) {
+        state[key] = [...data];
+      } else if (data.constructor === Object) {
+        state[key] = { ...data
+        };
+      } else {
+        state[key] = data;
+      }
     }
   },
   actions: {
