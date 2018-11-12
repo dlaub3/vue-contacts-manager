@@ -70,7 +70,7 @@ const handleRequest = async (url, data = '', fn, method = '') => {
 };
 
 export const searchAPI = async query => {
-  let url = ORIGIN + `/api/person?q={"filters":${query}}`;
+  let url = ORIGIN + `/api/person?${query}`;
   return await handleRequest(url, null, sendJSON, 'GET');
 };
 

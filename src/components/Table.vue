@@ -9,9 +9,8 @@
       </tr>
       </thead>
       <tbody>
-      <tr :key="index + 'r'" v-for="(row, index) in tableRows">
+      <tr :key="index + 'r'" v-for="(row, index) in data">
         <td :key="index + 'd'" v-for="(key, index) in columns">
-          <!-- <Table :layout="'vertical'" :columns="columnsMap[key]" :data="row[key]" v-if="row[key].constructor === Array" /> -->
           <router-link :to="'/contact/' + row.id">{{row[key]}}</router-link>
         </td>
       </tr>
@@ -22,30 +21,14 @@
 
 <script>
 import { mapState } from 'vuex';
-import { mapActions } from 'vuex';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'Table',
   props: {
-    data: {
-      type: Array,
-      default() {
-        return [];
-      },
-    },
     columns: {
       type: Array,
       default() {
-        return [
-          'id',
-          'first_name',
-          'last_name',
-          'date_of_birth',
-          // 'email_addresses',
-          // 'phone_numbers',
-          // 'addresses',
-        ];
+        return ['id', 'first_name', 'last_name', 'date_of_birth'];
       },
     },
     layout: {
@@ -53,39 +36,11 @@ export default {
       default: 'horizontal',
     },
   },
-  data() {
-    return {
-      rows: this.data,
-      columnsMap: {
-        email_addresses: ['id', 'email_address', 'type_id'],
-        phone_numbers: ['id', 'phone_number', 'type_id'],
-        addresses: [
-          'id',
-          'address_1',
-          'address_2',
-          'city',
-          'state',
-          'zip',
-          'country',
-          'type_id',
-        ],
-      },
-    };
-  },
-  components: {},
   computed: {
-    tableRows: {
-      get() {
-        return this.rows;
-      },
-    },
-    ...mapState({}),
-    ...mapGetters([]),
+    ...mapState({
+      data: state => state.data,
+    }),
   },
-  methods: {
-    ...mapActions([]),
-  },
-  watch: {},
 };
 </script>
 

@@ -15,10 +15,12 @@ const FORMS = {
   email_addresses: {
     id: '',
     email_address: '',
+    type_id: -1,
   },
   phone_numbers: {
     id: '',
     phone_number: '',
+    type_id: -1,
   },
   addresses: {
     address_1: '',
@@ -47,7 +49,8 @@ export default new Vuex.Store({
       },
     ],
     contact: {},
-    data: []
+    data: [],
+    page: 1,
   },
   mutations: {
     addForm(state, formKey) {
@@ -105,6 +108,21 @@ export default new Vuex.Store({
       } else {
         state[key] = data;
       }
+    },
+    appendState(state, payload) {
+      let {
+        key,
+        data
+      } = payload;
+
+      if (data instanceof Array) {
+        state[key] = [...state[key], ...data];
+      } else if (data instanceof Object) {
+        state[key] = {
+          ...state[key],
+          ...data
+        };
+      }
     }
   },
   actions: {
@@ -112,6 +130,11 @@ export default new Vuex.Store({
       commit
     }, payload) {
       commit('setState', payload);
+    },
+    appendState({
+      commit
+    }, payload) {
+      commit('appendState', payload);
     },
     addForm({
       commit

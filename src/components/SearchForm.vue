@@ -15,7 +15,7 @@
       </form>
         <button class="focus" @click="search">Search</button>
     </div>
-    <Table v-if="data.length >= 1" :data="data" />
+    <Table v-if="data.length !== 0" :data="data" />
     <div v-if="data.length < 1">
       {{message}}
     </div>
@@ -23,58 +23,30 @@
 </template>
 
 <script>
-import Select from '@/components/Select.vue';
-import Table from '@/components/Table.vue';
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
-import formStyles from './formStyles.scss';
 import { searchAPI } from '@/lib/api';
+import Table from '@/components/Table.vue';
+import formStyles from './formStyles.scss';
 
 export default {
   name: 'SearchForm',
+  components: {
+    Table,
+  },
   props: {},
   data() {
     return {
       message: '',
       first_name: '',
       last_name: '',
-      selectedOption: 1,
-      options: [
-        {
-          id: 1,
-          text: 'All',
-        },
-        {
-          id: 2,
-          text: 'First Name',
-        },
-        {
-          id: 3,
-          text: 'Last Name',
-        },
-        {
-          id: 4,
-          text: 'Date Of Birth',
-        },
-        {
-          id: 5,
-          text: 'Email Address',
-        },
-        {
-          id: 6,
-          text: 'Phone Number',
-        },
-        {
-          id: 7,
-          text: 'Address',
-        },
-      ],
     };
   },
   computed: {
     ...mapState({
       data: state => state.data,
+      page: state => state.page,
     }),
     query: {
       get() {
@@ -85,25 +57,54 @@ export default {
       },
     },
   },
-  components: {
-    Table,
-  },
   methods: {
-    ...mapActions(['setState']),
-    async search() {
-      let query = JSON.stringify(this.query);
-      let data = await searchAPI(query);
-      let payload = { key: 'data', data: data.objects };
+    ...mapActions(['setState', 'appendState']),
+    setSelected(selected) {
+      this.$data.selectedOption = selected;
+    },
+    setProps(data) {
       if (data.objects.length === 0) {
         this.message = 'No Results Found';
       } else {
         this.message = '';
       }
+      let payload = { key: 'page', data: data.page + 1 };
       this.setState(payload);
     },
-    setSelected(selected) {
-      this.$data.selectedOption = selected;
+    async search() {
+      let query = JSON.stringify(this.query);
+      query = `q={"filters":${query}}`;
+      let data = await searchAPI(query);
+      let payload = { key: 'data', data: data.objects };
+      this.setState(payload);
+      this.setProps(data);
     },
+    async loadMore() {
+      if (this.data.length === 0) {
+        return;
+      }
+      let query = JSON.stringify(this.query);
+      query = `q={"filters":${query}}&page=${this.page}`;
+      let data = await searchAPI(query);
+      let payload = { key: 'data', data: data.objects };
+      this.appendState(payload);
+      this.setProps(data);
+    },
+    handleScroll() {
+      let bottomOfWindow =
+        document.documentElement.scrollTop + window.innerHeight ===
+        document.documentElement.offsetHeight;
+
+      if (bottomOfWindow) {
+        this.loadMore();
+      }
+    },
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
 };
 </script>
