@@ -15,12 +15,10 @@ const FORMS = {
   email_addresses: {
     id: '',
     email_address: '',
-    type_id: -1,
   },
   phone_numbers: {
     id: '',
     phone_number: '',
-    type_id: -1,
   },
   addresses: {
     address_1: '',
