@@ -16,6 +16,21 @@ function isObject(val) {
   return (val instanceof Object);
 }
 
+export function deepClone(obj) {
+  let newObj = {};
+  for (let prop in obj) {
+    let val = obj[prop];
+    if (isArray(val)) {
+      newObj[prop] = val.map(obj => deepClone(obj));
+    } else if (isObject(val)) {
+      newObj[prop] = deepClone(obj);
+    } else {
+      newObj[prop] = val;
+    }
+  }
+  return newObj;
+}
+
 export function formatDataOut(obj) {
   obj = trim(obj);
   obj = phoneToDigits(obj);

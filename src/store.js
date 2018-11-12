@@ -4,25 +4,25 @@ import {
   getContact
 } from '@/lib/api';
 
+import {
+  deepClone
+} from '@/lib/objHelpers';
+
 Vue.use(Vuex);
 
-const FORMS = {
-  person: {
-    first_name: '',
-    last_name: '',
-    date_of_birth: '',
-  },
-  email_addresses: {
-    id: '',
+const CONTACT = {
+  first_name: '',
+  last_name: '',
+  date_of_birth: '',
+  email_addresses: [{
     email_address: '',
     type_id: -1,
-  },
-  phone_numbers: {
-    id: '',
+  }],
+  phone_numbers: [{
     phone_number: '',
     type_id: -1,
-  },
-  addresses: {
+  }],
+  addresses: [{
     address_1: '',
     address_2: '',
     city: '',
@@ -30,8 +30,11 @@ const FORMS = {
     country: '',
     zip: '',
     type_id: -1,
-  },
+  }],
 };
+
+
+
 
 export default new Vuex.Store({
   state: {
@@ -57,7 +60,7 @@ export default new Vuex.Store({
       let forms = propBuilder(formKey, state);
       let id = forms.length + 1;
       let formName = formKey.split('.').pop();
-      let newForm = FORMS[formName];
+      let newForm = CONTACT[formName][0];
       newForm.id = id;
       forms.push({
         ...newForm,
@@ -89,10 +92,7 @@ export default new Vuex.Store({
       prop = value;
     },
     resetForms(state) {
-      state.contact = FORMS.person;
-      state.contact.addresses = [FORMS.addresses];
-      state.contact.phone_numbers = [FORMS.phone_numbers];
-      state.contact.email_addresses = [FORMS.email_addresses];
+      state.contact = deepClone(CONTACT);
     },
     setState(state, payload) {
       let {
