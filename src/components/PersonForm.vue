@@ -23,14 +23,17 @@
 <script>
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
-import Select from '@/components/Select.vue';
 import formStyles from './formStyles.scss';
 
 export default {
   name: 'PersonForm',
-  components: {
-    Select,
+  props: {
+    stateKey: {
+      type: String,
+      default: () => console.error(`${this} missing stateKey`),
+    },
   },
+  components: {},
   computed: {
     ...mapState({
       form: state => state.contact,

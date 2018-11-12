@@ -27,14 +27,14 @@ import formStyles from './formStyles.scss';
 
 export default {
   name: 'EmailAddressForm',
-  props: {},
+  props: {
+    stateKey: {
+      type: String,
+      default: () => console.error(`${this} missing stateKey`),
+    },
+  },
   components: {
     Select,
-  },
-  data() {
-    return {
-      stateKey: 'contact.email_addresses',
-    };
   },
   computed: {
     ...mapState({

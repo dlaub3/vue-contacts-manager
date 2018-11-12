@@ -57,14 +57,14 @@ import formStyles from './formStyles.scss';
 
 export default {
   name: 'addressForm',
-  props: {},
+  props: {
+    stateKey: {
+      type: String,
+      default: () => console.error(`${this} missing stateKey`),
+    },
+  },
   components: {
     Select,
-  },
-  data() {
-    return {
-      stateKey: 'contact.addresses',
-    };
   },
   computed: {
     ...mapState({

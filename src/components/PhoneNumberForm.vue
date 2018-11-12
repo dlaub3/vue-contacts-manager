@@ -27,14 +27,14 @@ import formStyles from './formStyles.scss';
 
 export default {
   name: 'PhoneNumberForm',
-  props: {},
+  props: {
+    stateKey: {
+      type: String,
+      default: () => console.error(`${this} missing stateKey`),
+    },
+  },
   components: {
     Select,
-  },
-  data() {
-    return {
-      stateKey: 'contact.phone_numbers',
-    };
   },
   computed: {
     ...mapState({

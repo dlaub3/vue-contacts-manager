@@ -2,10 +2,10 @@
     <div id="form"> 
       <ModalMessage :active="showModal" @closeModal="showModal = false" :message="modalMessage"/>
       <h1>Contact Details</h1>
-          <PersonForm />
-          <EmailAddressForm />
-          <PhoneNumberForm />
-          <AddressForm/>
+          <PersonForm :stateKey="stateKey + 'person'"  />
+          <EmailAddressForm :stateKey="stateKey + 'email_addresses'"  />
+          <PhoneNumberForm :stateKey="stateKey + 'phone_numbers'" />
+          <AddressForm :stateKey="stateKey + 'addresses'"  />
 
           <div>
             <button class="focus" @click="updateContact">Update</button>
@@ -41,6 +41,7 @@ export default {
   },
   data() {
     return {
+      stateKey: 'contact.',
       showModal: false,
       modalMessage: '',
     };

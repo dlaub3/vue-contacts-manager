@@ -20,34 +20,34 @@
 
       <transition name="fade">
         <div  v-if="active === 'PersonForm'">
-          <PersonForm />
+          <PersonForm :stateKey="stateKey + 'person'" />
         </div>
       </transition>
 
       <transition name="fade">
         <div  v-if="active === 'EmailAddressForm'">
-          <EmailAddressForm />
+          <EmailAddressForm :stateKey="stateKey + 'email_addresses'" />
         </div>
       </transition>
 
       <transition name="fade">
         <div v-if="active === 'PhoneNumberForm'">
-          <PhoneNumberForm />
+          <PhoneNumberForm :stateKey="stateKey + 'phone_numbers'"  />
         </div>
       </transition>
 
       <transition name="fade">
         <div v-if="active === 'AddressForm'">
-          <AddressForm/>
+          <AddressForm :stateKey="stateKey + 'addresses'" />
         </div>
       </transition>
 
       <transition name="fade">
         <div v-if="active === 'Review'">
-          <PersonForm />
-          <EmailAddressForm />
-          <PhoneNumberForm />
-          <AddressForm/>
+          <PersonForm :stateKey="stateKey + 'person'"  />
+          <EmailAddressForm :stateKey="stateKey + 'email_addresses'"  />
+          <PhoneNumberForm :stateKey="stateKey + 'phone_numbers'"  />
+          <AddressForm :stateKey="stateKey + 'addresses'" />
         </div>
       </transition>
 
@@ -80,6 +80,7 @@ export default {
   },
   data() {
     return {
+      stateKey: 'contact.',
       active: 'PersonForm',
       prev: false,
       next: true,
