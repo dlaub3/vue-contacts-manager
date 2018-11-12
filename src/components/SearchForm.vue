@@ -50,10 +50,17 @@ export default {
     }),
     query: {
       get() {
-        return [
+        return JSON.stringify([
           { name: 'first_name', op: 'ilike', val: `%${this.first_name}%` },
           { name: 'last_name', op: 'ilike', val: `%${this.last_name}%` },
-        ];
+        ]);
+      },
+    },
+    canQueryMore: {
+      get() {
+        let page = this.page;
+        let data = this.first_name + this.last_name;
+        return data.trim() !== '' && page >= 2;
       },
     },
   },
@@ -72,19 +79,17 @@ export default {
       this.setState(payload);
     },
     async search() {
-      let query = JSON.stringify(this.query);
-      query = `q={"filters":${query}}`;
+      let query = `q={"filters":${this.query}}`;
       let data = await searchAPI(query);
       let payload = { key: 'data', data: data.objects };
       this.setState(payload);
       this.setProps(data);
     },
     async loadMore() {
-      if (this.data.length === 0) {
+      if (!this.canQueryMore) {
         return;
       }
-      let query = JSON.stringify(this.query);
-      query = `q={"filters":${query}}&page=${this.page}`;
+      let query = `q={"filters":${this.query}}&page=${this.page || 2}`;
       let data = await searchAPI(query);
       let payload = { key: 'data', data: data.objects };
       this.appendState(payload);
