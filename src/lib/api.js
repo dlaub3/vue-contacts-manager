@@ -84,9 +84,10 @@ export const getContact = async id => {
 
 
 export const addContact = async data => {
+  let person;
   try {
     let url = ORIGIN + '/api/person';
-    let person = await handleRequest(url, data, sendJSON, 'POST');
+    person = await handleRequest(url, data, sendJSON, 'POST');
     if (!person.id) {
       throw new Error(`Failed to POST: ${url}`);
     }
@@ -95,7 +96,7 @@ export const addContact = async data => {
     return false;
   }
 
-  return true;
+  return person;
 };
 
 export const updateContact = async (id, data) => {

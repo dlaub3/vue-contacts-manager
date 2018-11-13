@@ -4,8 +4,7 @@
      <div class="modal opacity"></div>
       <div class="modal">
          <div class="card">
-          <div class="content">
-              {{message}}
+          <div class="content" v-html="message">
           </div>
           <button @click="$emit('closeModal')">close</button>
         </div>

@@ -98,17 +98,19 @@ export default {
     ...mapActions(['resetForms']),
     async handleSubmit() {
       let data = this.contact;
-      let success = await addContact(data);
-      if (success) {
+      let person = await addContact(data);
+      if (person) {
         this.resetForms();
         this.$data.active = 'PersonForm';
         this.$data.prev = false;
         this.$data.next = true;
         this.$data.nextText = 'Next';
-        this.$data.modalMessage = 'Contact added successfully';
+        this.$data.modalMessage = `
+            Contact added successfully<br><br>
+            <a href="/#/contact/${person.id}">View Contact</a>`;
         this.$data.showModal = true;
       }
-      if (!success) {
+      if (!person) {
         this.$data.showModal = true;
         this.$data.modalMessage =
           'There was an error adding your contact, please try again.';
