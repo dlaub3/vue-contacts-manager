@@ -107,7 +107,7 @@ export default {
 }
 
 #selector .selected {
-  background: #35495e;
+  background: var(--color-green);
   color: white;
 }
 </style>

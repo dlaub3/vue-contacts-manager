@@ -49,7 +49,7 @@ export default {
   margin-top: 100px;
 }
 thead {
-  background: #41b883;
+  background: var(--color-green);
   color: #fff;
 }
 th {
@@ -67,7 +67,7 @@ tbody tr:nth-child(1n) {
 }
 
 tbody tr:nth-child(2n) {
-  background: #2c3e50;
+  background: var(--color-blue);
 }
 
 tbody tr a {
@@ -81,7 +81,7 @@ tbody tr a:hover {
 }
 
 tbody tr:nth-child(1n) a {
-  color: #2c3e50;
+  color: var(--color-blue);
 }
 
 tbody tr:nth-child(2n) a {
