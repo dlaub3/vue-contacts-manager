@@ -31,18 +31,21 @@ function sendJSON(url = ``, data = false, method = 'GET') {
         case 'GET':
           if ([200].find(s => s === response.status)) {
             return response.json();
+          } else {
+            throw new Error(`Failed to POST: ${url}`);
           }
-          break;
         case 'PUT':
           if ([200, 201].find(s => s === response.status)) {
             return response.json();
+          } else {
+            throw new Error(`Failed to POST: ${url}`);
           }
-          break;
         case 'DELETE':
           if ([200, 201].find(s => s === response.status)) {
             return response.json();
+          } else {
+            throw new Error(`Failed to POST: ${url}`);
           }
-          break;
         default:
           return response.json();
       }
@@ -63,7 +66,6 @@ const handleRequest = async (url, data = '', fn, method = '') => {
   }
 
   data = await fn(url, data, method).then(data => data);
-
   data = obj.formatDataIn(data);
 
   return data;
