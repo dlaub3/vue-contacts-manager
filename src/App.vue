@@ -26,15 +26,15 @@
   padding: 30px;
   display: flex;
   justify-content: space-between;
-  a {
-    font-weight: bold;
-    color: var(--color-blue);
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
   img {
     height: 75px;
+  }
+}
+a {
+  font-weight: bold;
+  color: var(--color-blue);
+  &.router-link-exact-active {
+    color: #42b983;
   }
 }
 </style>
