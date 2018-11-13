@@ -16,7 +16,7 @@
         <button class="focus" @click="search">Search</button>
     </div>
     <Table v-if="data.length !== 0" :data="data" />
-    <div v-if="data.length < 1">
+    <div class="message" v-if="message">
       {{message}}
     </div>
   </div>
@@ -41,6 +41,7 @@ export default {
       message: '',
       first_name: '',
       last_name: '',
+      total_pages: '',
     };
   },
   computed: {
@@ -70,7 +71,8 @@ export default {
       this.$data.selectedOption = selected;
     },
     setProps(data) {
-      if (data.objects.length === 0) {
+      this.total_pages = data.total_pages;
+      if (!data.objects.length) {
         this.message = 'No Results Found';
       } else {
         this.message = '';
@@ -86,7 +88,8 @@ export default {
       this.setProps(data);
     },
     async loadMore() {
-      if (!this.canQueryMore) {
+      if (!this.canQueryMore || this.total_pages <= this.page) {
+        this.message = 'No Further Results Found';
         return;
       }
       let query = `q={"filters":${this.query}}&page=${this.page || 2}`;
@@ -121,5 +124,9 @@ export default {
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+}
+
+.message {
+  margin: 50px;
 }
 </style>
