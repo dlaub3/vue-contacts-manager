@@ -10,6 +10,9 @@
           <div>
             <button class="focus" @click="updateContact">Update</button>
           </div>
+          <div>
+            <button class="important" @click="deleteContact">Delete</button>
+          </div>
 
     </div>
 </template>
@@ -22,7 +25,7 @@ import PersonForm from '@/components/PersonForm.vue';
 import EmailAddressForm from '@/components/EmailAddressForm.vue';
 import PhoneNumberForm from '@/components/PhoneNumberForm.vue';
 import AddressForm from '@/components/AddressForm.vue';
-import { updateContact } from '@/lib/api';
+import { updateContact, deleteContact } from '@/lib/api';
 
 export default {
   name: 'Contact',
@@ -53,7 +56,12 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(['resetForms', 'getContact', 'linkState']),
+    ...mapActions([
+      'resetForms',
+      'getContact',
+      'linkState',
+      'deleteContactData',
+    ]),
     fetchData() {
       this.getContact(this.$route.params.id);
     },
@@ -65,6 +73,16 @@ export default {
       } else {
         this.$data.showModal = true;
         this.$data.modalMessage = 'Update successful :)';
+      }
+    },
+    async deleteContact() {
+      let success = await deleteContact(this.contact.id);
+      if (!success) {
+        this.$data.showModal = true;
+        this.$data.modalMessage = 'Delete failed, please try again.';
+      } else {
+        this.$router.go(-1);
+        this.deleteContactData(this.contact.id);
       }
     },
   },

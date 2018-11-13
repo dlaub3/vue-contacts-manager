@@ -41,8 +41,8 @@ function sendJSON(url = ``, data = false, method = 'GET') {
             throw new Error(`Failed to POST: ${url}`);
           }
         case 'DELETE':
-          if ([200, 201].find(s => s === response.status)) {
-            return response.json();
+          if ([204].find(s => s === response.status)) {
+            return true;
           } else {
             throw new Error(`Failed to POST: ${url}`);
           }
@@ -104,7 +104,7 @@ export const updateContact = async (id, data) => {
     let url = ORIGIN + '/api/person/' + id;
     let person = await handleRequest(url, data, sendJSON, 'PUT');
     if (!person.id) {
-      throw new Error(`Failed to POST: ${url}`);
+      throw new Error(`Failed to PUT: ${url}`);
     }
   } catch (e) {
     console.log(e);
@@ -112,4 +112,20 @@ export const updateContact = async (id, data) => {
   }
 
   return data;
+};
+
+export const deleteContact = async id => {
+  let success;
+  try {
+    let url = ORIGIN + '/api/person/' + id;
+    success = await handleRequest(url, null, sendJSON, 'DELETE');
+    if (!success) {
+      throw new Error(`Failed to DELETE: ${url}`);
+    }
+  } catch (e) {
+    console.log(e);
+    return {};
+  }
+
+  return success;
 };
