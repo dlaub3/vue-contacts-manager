@@ -109,6 +109,20 @@ export default new Vuex.Store({
         state[key] = data;
       }
     },
+    linkState(state, payload) {
+      let {
+        key,
+        data
+      } = payload;
+
+      if (data.constructor === Array) {
+        state[key] = data;
+      } else if (data.constructor === Object) {
+        state[key] = data;
+      } else {
+        state[key] = data;
+      }
+    },
     appendState(state, payload) {
       let {
         key,
@@ -130,6 +144,11 @@ export default new Vuex.Store({
       commit
     }, payload) {
       commit('setState', payload);
+    },
+    linkState({
+      commit
+    }, payload) {
+      commit('linkState', payload);
     },
     appendState({
       commit
