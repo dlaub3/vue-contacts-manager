@@ -26,9 +26,9 @@
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
-import { searchAPI } from '@/lib/api';
 import Table from '@/components/Table.vue';
 import formStyles from './formStyles.scss';
+import { searchAPI } from '@/lib/api';
 
 export default {
   name: 'SearchForm',
