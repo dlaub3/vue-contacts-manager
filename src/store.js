@@ -81,6 +81,14 @@ export default new Vuex.Store({
         }
       });
     },
+    deleteForm(state, payload) {
+      let {
+        id,
+        form,
+      } = payload;
+
+      state.contact[form] = state.contact[form].filter(form => form.id !== id);
+    },
     updateProp(state, payload) {
       let {
         propkey,
@@ -159,6 +167,11 @@ export default new Vuex.Store({
       commit
     }, form) {
       commit('addForm', form);
+    },
+    deleteForm({
+      commit
+    }, payload) {
+      commit('deleteForm', payload);
     },
     updateForm({
       commit

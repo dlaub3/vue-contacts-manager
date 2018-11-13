@@ -43,6 +43,7 @@
           :options="options"
 				  v-on:option-selected="updateForm({ form: stateKey, id: form.id, type_id: $event, field: 'type_id'})" 
         />
+         <button class="important" @click="deleteForm({form: 'addresses', id: form.id})">Delete Address</button>
     </form>
       <button @click="addForm(stateKey)">Add Address</button>
   </div>
@@ -74,7 +75,7 @@ export default {
     ...mapGetters([]),
   },
   methods: {
-    ...mapActions(['addForm', 'updateForm']),
+    ...mapActions(['addForm', 'updateForm', 'deleteForm']),
   },
 };
 </script>
