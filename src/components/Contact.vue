@@ -53,7 +53,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(['resetForms', 'getContact', 'setState']),
+    ...mapActions(['resetForms', 'getContact', 'linkState']),
     fetchData() {
       this.getContact(this.$route.params.id);
     },
@@ -62,6 +62,9 @@ export default {
       if (!contact.id) {
         this.$data.showModal = true;
         this.$data.modalMessage = 'Update failed, please try again.';
+      } else {
+        this.$data.showModal = true;
+        this.$data.modalMessage = 'Update successful :)';
       }
     },
   },
@@ -72,7 +75,7 @@ export default {
     let id = this.$route.params.id;
     let contact = this.searchContacts(id);
     if (contact.length !== 0) {
-      this.setState({ key: 'contact', data: contact[0] });
+      this.linkState({ key: 'contact', data: contact[0] });
       console.info('Contact found! 😹');
     } else {
       console.info('Contact not found, fetching from server 😿');
