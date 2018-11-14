@@ -15,7 +15,7 @@
         />
         <input 
           v-model="form.date_of_birth"
-          placeholder="Date Of Birth" 
+          placeholder="Date Of Birth YYYY-MM-DD" 
           type="text" 
           @keyup="updateProp({propkey: 'contact', value: form})"
         />
