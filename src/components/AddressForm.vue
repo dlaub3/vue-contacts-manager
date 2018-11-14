@@ -1,7 +1,8 @@
 <template>
   <div>
     <form v-for="form in forms" v-bind:key="form.id">
-        <input 
+        <input
+          :class="[form.address_1 ? '' : 'required']"
           v-model="form.address_1" 
           type="text" 
           placeholder="Address 1" 
@@ -14,31 +15,36 @@
           @keyup="updateForm({ form: stateKey, id: form.id, address_2: form.address_2, field: 'address_2' })" 
         />
         <input 
+          :class="[form.city ? '' : 'required']"
           v-model="form.city" 
           type="text" 
           placeholder="City"
           @keyup="updateForm({ form: stateKey, id: form.id, city: form.city, field: 'city' })" 
         />
         <input 
+          :class="[form.state ? '' : 'required']"
           v-model="form.state" 
           type="text" 
           placeholder="State"
           @keyup="updateForm({ form: stateKey, id: form.id, state: form.state, field: 'state' })" 
         >
         <input 
+          :class="[form.zip ? '' : 'required']"
           v-model="form.zip" 
           type="text" 
           placeholder="Zip"
           @keyup="updateForm({ form: stateKey, id: form.id, zip: form.zip, field: 'zip' })" 
           />
         <input 
+          :class="[form.country ? '' : 'required']"
           v-model="form.country"
           type="text" 
           placeholder="Country"
           @keyup="updateForm({ form: stateKey, id: form.id, country: form.country, field: 'country' })" 
           />
         <Select
-          :message="'Select email type'" 
+          :class="[form.type_id ? '' : 'required']"
+          :message="'Select address type'"
           :selectedOption="form.type_id" 
           :options="options"
 				  v-on:option-selected="updateForm({ form: stateKey, id: form.id, type_id: $event, field: 'type_id'})" 

@@ -1,12 +1,14 @@
 <template>
     <form>
-        <input 
+        <input
+          :class="[form.first_name? '' : 'required']"
           v-model="form.first_name"
           placeholder="First Name" 
-          type="text" autofocus required 
+          type="text" autofocus
           @keyup="updateProp({propkey: 'contact', value: form})"
         />
-        <input 
+        <input
+          :class="[form.last_name ? '' : 'required']"
           v-model="form.last_name"
           placeholder="Last Name" 
           type="text" 

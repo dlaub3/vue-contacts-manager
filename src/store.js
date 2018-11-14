@@ -16,11 +16,11 @@ const CONTACT = {
   date_of_birth: '',
   email_addresses: [{
     email_address: '',
-    type_id: -1,
+    type_id: 1,
   }],
   phone_numbers: [{
     phone_number: '',
-    type_id: -1,
+    type_id: 1,
   }],
   addresses: [{
     address_1: '',
@@ -29,7 +29,7 @@ const CONTACT = {
     state: '',
     country: '',
     zip: '',
-    type_id: -1,
+    type_id: 1,
   }],
 };
 
@@ -172,7 +172,7 @@ export default new Vuex.Store({
       commit('addForm', form);
     },
     deleteForm({
-      commit
+      commit,
     }, payload) {
       commit('deleteForm', payload);
     },
@@ -209,6 +209,9 @@ export default new Vuex.Store({
   getters: {
     searchContacts: state => id => {
       return state.data.filter(contact => Number(contact.id) === Number(id));
+    },
+    searchForms: state => (forms, id) => {
+      return state.contact[forms].filter(form => Number(form.id) === Number(id))[0];
     },
   },
 });

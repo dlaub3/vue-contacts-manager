@@ -1,14 +1,15 @@
 <template>
   <div>
     <form v-for="form in forms" v-bind:key="form.id">
-      <input  
+      <input
+        :class="[form.email_address ? '' : 'required']"  
         v-model="form.email_address" 
 				type="email"
 				placeholder="Email Address" 
-				required
 				@keyup="updateForm({ form: stateKey, id: form.id, email_address: form.email_address, field: 'email_address' })" 
 				/>
-      <Select 
+      <Select
+        :class="[form.type_id ? '' : 'required']" 
       	:message="'Select email type'"
 				:selectedOption="form.type_id" 
 				:options="options" 

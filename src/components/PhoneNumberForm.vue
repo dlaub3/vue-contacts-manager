@@ -1,14 +1,15 @@
 <template>
   <div>
     <form v-for="form in forms" v-bind:key="form.id">
-      <input  
+      <input
+        :class="[form.phone_number ? '' : 'required']" 
         v-model="form.phone_number" 
 				type="tel"
 				placeholder="Phone Number" 
-				required
 				@keyup="updateForm({ form: stateKey, id: form.id, phone_number: form.phone_number, field: 'phone_number' })" 
 			/>
-      <Select 
+      <Select
+        :class="[form.type_id ? '' : 'required']" 
       	:message="'Select phone type'"  
 				:selectedOption="form.type_id" 
 				:options="options" 
