@@ -1,12 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {
-  getContact
+  getContact,
+  deleteForm
 } from '@/lib/api';
 
 import {
   deepClone
 } from '@/lib/objHelpers';
+import {
+  formatAPIString
+} from '@/lib/strHelpers';
 
 Vue.use(Vuex);
 
@@ -171,10 +175,18 @@ export default new Vuex.Store({
     }, form) {
       commit('addForm', form);
     },
-    deleteForm({
+    async deleteForm({
       commit,
+      getters
     }, payload) {
-      commit('deleteForm', payload);
+      let form = getters.searchForms(payload.form, payload.id);
+      if (form.person_id) {
+        let url = formatAPIString(payload.form);
+        let success = await deleteForm(url, form.id);
+        success ? commit('deleteForm', payload) : console.log(`Failed to delete:${url,form.id}`);
+      } else {
+        commit('deleteForm', payload);
+      }
     },
     deleteContactData({
       commit

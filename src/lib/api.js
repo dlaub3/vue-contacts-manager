@@ -124,7 +124,23 @@ export const deleteContact = async id => {
     }
   } catch (e) {
     console.log(e);
-    return {};
+    return false;
+  }
+
+  return success;
+};
+
+export const deleteForm = async (resource, id) => {
+  let success;
+  try {
+    let url = ORIGIN + `/api/${resource}/${id}`;
+    success = await handleRequest(url, null, sendJSON, 'DELETE');
+    if (!success) {
+      throw new Error(`Failed to DELETE: ${url}`);
+    }
+  } catch (e) {
+    console.log(e);
+    return false;
   }
 
   return success;
